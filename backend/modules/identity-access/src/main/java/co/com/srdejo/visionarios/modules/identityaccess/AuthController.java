@@ -59,4 +59,10 @@ public class AuthController {
         authService.logout(claims);
         return ApiResponse.ok(null);
     }
+
+    @PostMapping("/resend-verification")
+    public ApiResponse<Void> resendVerification(@AuthenticationPrincipal JwtClaims claims) {
+        authService.resendVerification(claims.userId());
+        return ApiResponse.ok(null);
+    }
 }

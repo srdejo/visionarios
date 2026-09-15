@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(securityErrorResponder))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/ping").permitAll()
-                        .requestMatchers("/api/auth/logout").authenticated()
+                        .requestMatchers("/api/auth/logout", "/api/auth/resend-verification").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/mail/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")

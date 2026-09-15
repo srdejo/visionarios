@@ -50,6 +50,10 @@ export class AuthService {
     return this.http.post<ApiResponse<null>>(`/api/auth/verify-email/${token}`, {});
   }
 
+  resendVerification(): Observable<ApiResponse<null>> {
+    return this.http.post<ApiResponse<null>>('/api/auth/resend-verification', {});
+  }
+
   acceptInvite(
     token: string,
     payload: { fullName: string; phone: string; password: string; profile: string },

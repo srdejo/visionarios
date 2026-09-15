@@ -20,14 +20,21 @@
 
       <div>
         <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Correo</label>
-        <input type="email" name="email" [(ngModel)]="email" required
+        <input type="email" name="email" [(ngModel)]="email" required [attr.autocomplete]="emailAutocomplete()"
                class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none lg:h-[52px]" />
       </div>
       <div>
         <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Contraseña</label>
-        <input type="password" name="password" [(ngModel)]="password" required
+        <input type="password" name="password" [(ngModel)]="password" required [attr.autocomplete]="passwordAutocomplete()"
                class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none lg:h-[52px]" />
       </div>
+
+      <label class="flex items-center gap-2 text-sm text-muted-1">
+        <input type="checkbox" name="rememberPassword" [ngModel]="rememberPassword()" (ngModelChange)="rememberPassword.set($event)"
+               [ngModelOptions]="{ standalone: true }"
+               class="h-4 w-4 rounded border-line-1 accent-dark" />
+        Recordar contraseña
+      </label>
 
       @if (error()) {
         <p class="text-danger text-sm">{{ error() }}</p>
@@ -53,12 +60,4 @@
       </a>
     </form>
   </div>
-
-  @if (showVerifyReminder()) {
-    <app-info-modal
-      title="Confirma tu correo"
-      message="Te enviamos un enlace de confirmación a tu correo. Aún puedes usar tu cuenta, pero te recomendamos confirmarlo pronto."
-      (close)="dismissVerifyReminder()">
-    </app-info-modal>
-  }
 </div>

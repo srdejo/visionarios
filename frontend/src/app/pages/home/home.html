@@ -167,4 +167,15 @@
       </div>
     </div>
   </div>
+
+  @if (showVerifyReminder()) {
+    <app-info-modal
+      title="Confirma tu correo"
+      [message]="resendMessage()"
+      actionLabel="Reenviar correo"
+      closeLabel="Entendido"
+      (action)="resendVerification()"
+      (close)="dismissVerifyReminder()">
+    </app-info-modal>
+  }
 </div>

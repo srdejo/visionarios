@@ -148,6 +148,19 @@ public class AuthService {
     }
 
     @Transactional
+    public void resendVerification(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+        if (user.isVerified()) {
+            throw new BusinessRuleException("Tu correo ya esta confirmado");
+        }
+        EmailVerificationToken verificationToken = new EmailVerificationToken(UUID.randomUUID(), UUID.randomUUID().toString(), user.getId());
+        emailVerificationTokenRepository.save(verificationToken);
+        String link = publicUrl + "/verificar-correo/" + verificationToken.getToken();
+        mailSender.sendEmailVerification(user.getEmail(), user.getFullName(), link);
+    }
+
+    @Transactional
     public void verifyEmail(String token) {
         EmailVerificationToken verificationToken = emailVerificationTokenRepository.findByToken(token)
                 .orElseThrow(() -> new NotFoundException("Enlace de verificación no encontrado"));

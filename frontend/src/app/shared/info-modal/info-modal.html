@@ -3,6 +3,12 @@
     <h2 class="font-oswald text-lg font-bold uppercase">{{ title }}</h2>
     <p class="text-muted-2 text-sm mt-2">{{ message }}</p>
     <div class="flex gap-3 mt-6">
+      @if (actionLabel) {
+        <button type="button" (click)="action.emit()"
+                class="flex-1 border border-dark text-dark font-oswald uppercase tracking-wide py-3 rounded-lg cursor-pointer">
+          {{ actionLabel }}
+        </button>
+      }
       <button type="button" (click)="close.emit()"
               class="flex-1 bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg cursor-pointer">
         {{ closeLabel }}
