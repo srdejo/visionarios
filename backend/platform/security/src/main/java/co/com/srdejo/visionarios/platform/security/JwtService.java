@@ -29,6 +29,7 @@ public class JwtService {
         Instant now = Instant.now();
         return Jwts.builder()
                 .subject(claims.userId().toString())
+                .id(UUID.randomUUID().toString())
                 .claim("user_id", claims.userId().toString())
                 .claim("role", claims.role())
                 .issuedAt(Date.from(now))
@@ -39,6 +40,7 @@ public class JwtService {
 
     public JwtClaims parse(String token) {
         Claims body = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
-        return new JwtClaims(UUID.fromString(body.get("user_id", String.class)), body.get("role", String.class));
+        return new JwtClaims(UUID.fromString(body.get("user_id", String.class)), body.get("role", String.class),
+                body.getId(), body.getExpiration().toInstant());
     }
 }

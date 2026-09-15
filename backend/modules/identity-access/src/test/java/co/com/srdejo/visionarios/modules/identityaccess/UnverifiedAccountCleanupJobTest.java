@@ -59,7 +59,7 @@ class UnverifiedAccountCleanupJobTest {
 
         job.deleteExpiredUnverifiedAccounts();
 
-        verify(userRepository, never()).delete(any());
+        verify(userRepository, never()).delete(any(User.class));
     }
 
     @Test
@@ -69,6 +69,6 @@ class UnverifiedAccountCleanupJobTest {
 
         job.deleteExpiredUnverifiedAccounts();
 
-        verify(userRepository, never()).delete(any());
+        verify(userRepository, never()).delete(any(User.class));
     }
 }

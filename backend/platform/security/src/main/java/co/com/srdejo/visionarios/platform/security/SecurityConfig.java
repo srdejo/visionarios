@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(securityErrorResponder))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/ping").permitAll()
+                        .requestMatchers("/api/auth/logout").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/mail/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -66,6 +67,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 }

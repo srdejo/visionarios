@@ -28,9 +28,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final JwtService jwtService;
+    private final TokenRevocationStore tokenRevocationStore;
 
-    public JwtAuthenticationFilter(JwtService jwtService) {
+    public JwtAuthenticationFilter(JwtService jwtService, TokenRevocationStore tokenRevocationStore) {
         this.jwtService = jwtService;
+        this.tokenRevocationStore = tokenRevocationStore;
     }
 
     @Override
@@ -40,6 +42,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             try {
                 JwtClaims claims = jwtService.parse(header.substring(7));
+                if (tokenRevocationStore.isRevoked(claims.jti())) {
+                    throw new IllegalStateException("Token revocado");
+                }
                 var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + claims.role()));
                 var authentication = new UsernamePasswordAuthenticationToken(claims, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -11,5 +11,16 @@ SuccessExitStatus=143
 Restart=always
 RestartSec=5
 
+# Hardening: el proceso no necesita privilegios ni acceso al resto del sistema.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+ReadWritePaths=/home/srdejo/apps/visionarios
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
 [Install]
 WantedBy=multi-user.target

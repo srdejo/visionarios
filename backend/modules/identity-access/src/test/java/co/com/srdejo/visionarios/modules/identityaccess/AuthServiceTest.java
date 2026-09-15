@@ -4,6 +4,7 @@ import co.com.srdejo.visionarios.modules.identityaccess.dto.LoginRequest;
 import co.com.srdejo.visionarios.modules.identityaccess.dto.RegisterRequest;
 import co.com.srdejo.visionarios.modules.identityaccess.dto.RegisterResponse;
 import co.com.srdejo.visionarios.platform.security.JwtService;
+import co.com.srdejo.visionarios.platform.security.TokenRevocationStore;
 import co.com.srdejo.visionarios.platform.webcommon.BusinessRuleException;
 import co.com.srdejo.visionarios.platform.webcommon.NotFoundException;
 import co.com.srdejo.visionarios.platform.webcommon.mail.MailSender;
@@ -40,6 +41,8 @@ class AuthServiceTest {
     @Mock
     private JwtService jwtService;
     @Mock
+    private TokenRevocationStore tokenRevocationStore;
+    @Mock
     private MailSender mailSender;
 
     private AuthService authService;
@@ -48,7 +51,7 @@ class AuthServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         authService = new AuthService(userRepository, passwordResetTokenRepository, emailVerificationTokenRepository,
-                passwordEncoder, jwtService, mailSender, "https://visionarios.example.com");
+                passwordEncoder, jwtService, tokenRevocationStore, mailSender, "https://visionarios.example.com");
     }
 
     private RegisterRequest registerRequest(String password, String confirmPassword) {

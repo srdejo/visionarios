@@ -74,7 +74,7 @@ public class AdminInviteService {
                 passwordEncoder.encode(request.password()), Role.ADMIN, request.profile());
         userRepository.save(user);
         invite.markUsed();
-        String jwt = jwtService.issue(new JwtClaims(user.getId(), user.getRole().name()));
+        String jwt = jwtService.issue(new JwtClaims(user.getId(), user.getRole().name(), null, null));
         return new AuthResponse(jwt, UserResponse.from(user));
     }
 }

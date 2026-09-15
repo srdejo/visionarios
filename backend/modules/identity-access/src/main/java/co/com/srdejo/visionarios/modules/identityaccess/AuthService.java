@@ -9,6 +9,7 @@ import co.com.srdejo.visionarios.modules.identityaccess.dto.UpdateProfileRequest
 import co.com.srdejo.visionarios.modules.identityaccess.dto.UserResponse;
 import co.com.srdejo.visionarios.platform.security.JwtClaims;
 import co.com.srdejo.visionarios.platform.security.JwtService;
+import co.com.srdejo.visionarios.platform.security.TokenRevocationStore;
 import co.com.srdejo.visionarios.platform.webcommon.BusinessRuleException;
 import co.com.srdejo.visionarios.platform.webcommon.NotFoundException;
 import co.com.srdejo.visionarios.platform.webcommon.mail.MailSender;
@@ -27,18 +28,20 @@ public class AuthService {
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final TokenRevocationStore tokenRevocationStore;
     private final MailSender mailSender;
     private final String publicUrl;
 
     public AuthService(UserRepository userRepository, PasswordResetTokenRepository passwordResetTokenRepository,
                         EmailVerificationTokenRepository emailVerificationTokenRepository,
-                        PasswordEncoder passwordEncoder, JwtService jwtService, MailSender mailSender,
-                        @Value("${app.public-url}") String publicUrl) {
+                        PasswordEncoder passwordEncoder, JwtService jwtService, TokenRevocationStore tokenRevocationStore,
+                        MailSender mailSender, @Value("${app.public-url}") String publicUrl) {
         this.userRepository = userRepository;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.emailVerificationTokenRepository = emailVerificationTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.tokenRevocationStore = tokenRevocationStore;
         this.mailSender = mailSender;
         this.publicUrl = publicUrl;
     }
@@ -158,6 +161,10 @@ public class AuthService {
     }
 
     public String issueToken(User user) {
-        return jwtService.issue(new JwtClaims(user.getId(), user.getRole().name()));
+        return jwtService.issue(new JwtClaims(user.getId(), user.getRole().name(), null, null));
+    }
+
+    public void logout(JwtClaims claims) {
+        tokenRevocationStore.revoke(claims.jti(), claims.expiresAt());
     }
 }

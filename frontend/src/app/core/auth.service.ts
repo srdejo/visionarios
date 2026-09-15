@@ -1,6 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, catchError, of, tap } from 'rxjs';
 import {
   ApiResponse,
   AuthResponse,
@@ -79,6 +79,14 @@ export class AuthService {
   }
 
   logout(): void {
+    if (this.tokenSignal()) {
+      // Revoca el token en el servidor (ver TokenRevocationStore); no bloquea el
+      // logout local si falla (token ya vencido, red caida, etc.).
+      this.http
+        .post('/api/auth/logout', {})
+        .pipe(catchError(() => of(null)))
+        .subscribe();
+    }
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     this.tokenSignal.set(null);

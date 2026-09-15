@@ -1,0 +1,14 @@
+# Perfil de produccion (--spring.profiles.active=prod, ver infra/visionarios.service).
+# A diferencia de application.yml, aqui NO se definen valores por defecto para los
+# secretos/origen CORS: si la variable de entorno falta, el arranque falla en vez de
+# usar un valor inseguro (JWT_SECRET de ejemplo, password debil, localhost).
+spring:
+  datasource:
+    password: ${DB_PASSWORD}
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+
+cors:
+  allowed-origin: ${CORS_ALLOWED_ORIGIN}

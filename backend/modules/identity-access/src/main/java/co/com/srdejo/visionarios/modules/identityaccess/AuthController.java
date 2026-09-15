@@ -6,8 +6,10 @@ import co.com.srdejo.visionarios.modules.identityaccess.dto.LoginRequest;
 import co.com.srdejo.visionarios.modules.identityaccess.dto.RegisterRequest;
 import co.com.srdejo.visionarios.modules.identityaccess.dto.RegisterResponse;
 import co.com.srdejo.visionarios.modules.identityaccess.dto.ResetPasswordRequest;
+import co.com.srdejo.visionarios.platform.security.JwtClaims;
 import co.com.srdejo.visionarios.platform.webcommon.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +51,12 @@ public class AuthController {
     @PostMapping("/verify-email/{token}")
     public ApiResponse<Void> verifyEmail(@PathVariable String token) {
         authService.verifyEmail(token);
+        return ApiResponse.ok(null);
+    }
+
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout(@AuthenticationPrincipal JwtClaims claims) {
+        authService.logout(claims);
         return ApiResponse.ok(null);
     }
 }
