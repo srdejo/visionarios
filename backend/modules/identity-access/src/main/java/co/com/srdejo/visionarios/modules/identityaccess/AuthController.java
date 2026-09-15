@@ -4,9 +4,11 @@ import co.com.srdejo.visionarios.modules.identityaccess.dto.AuthResponse;
 import co.com.srdejo.visionarios.modules.identityaccess.dto.ForgotPasswordRequest;
 import co.com.srdejo.visionarios.modules.identityaccess.dto.LoginRequest;
 import co.com.srdejo.visionarios.modules.identityaccess.dto.RegisterRequest;
+import co.com.srdejo.visionarios.modules.identityaccess.dto.RegisterResponse;
 import co.com.srdejo.visionarios.modules.identityaccess.dto.ResetPasswordRequest;
 import co.com.srdejo.visionarios.platform.webcommon.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ApiResponse<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public ApiResponse<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ApiResponse.ok(authService.register(request));
     }
 
@@ -40,7 +42,13 @@ public class AuthController {
 
     @PostMapping("/reset-password")
     public ApiResponse<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
-        authService.resetPassword(request.token(), request.password());
+        authService.resetPassword(request.token(), request.password(), request.confirmPassword());
+        return ApiResponse.ok(null);
+    }
+
+    @PostMapping("/verify-email/{token}")
+    public ApiResponse<Void> verifyEmail(@PathVariable String token) {
+        authService.verifyEmail(token);
         return ApiResponse.ok(null);
     }
 }

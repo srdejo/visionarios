@@ -28,6 +28,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/reset-password/reset-password').then((m) => m.ResetPassword),
   },
   {
+    path: 'verificar-correo/:token',
+    loadComponent: () => import('./pages/auth/verify-email/verify-email').then((m) => m.VerifyEmail),
+  },
+  {
     path: 'darme-de-baja/:token',
     loadComponent: () => import('./pages/unsubscribe/unsubscribe').then((m) => m.Unsubscribe),
   },
@@ -40,6 +44,11 @@ export const routes: Routes = [
     path: 'biblioteca',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/biblioteca/biblioteca').then((m) => m.Biblioteca),
+  },
+  {
+    path: 'agenda',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/agenda/agenda').then((m) => m.Agenda),
   },
   {
     path: 'eventos/:id',

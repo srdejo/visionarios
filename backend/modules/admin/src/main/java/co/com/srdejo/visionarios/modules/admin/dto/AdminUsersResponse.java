@@ -5,5 +5,6 @@ import co.com.srdejo.visionarios.modules.identityaccess.dto.UserResponse;
 import java.util.List;
 import java.util.Map;
 
-public record AdminUsersResponse(List<UserResponse> users, long total, Map<String, Long> countByProfile) {
+public record AdminUsersResponse(List<UserResponse> users, long total, Map<String, Long> countByProfile,
+                                  int page, int size, long totalFiltered, int totalPages) {
 }

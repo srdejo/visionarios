@@ -1,41 +1,51 @@
-<div class="min-h-screen bg-white px-6 py-8 pb-24">
-  <h1 class="font-oswald text-2xl font-bold uppercase mb-4">Material</h1>
+<div class="min-h-screen bg-white px-6 py-8 pb-24 lg:pb-14 lg:bg-[#F4F2EF] lg:px-10">
+  <div class="lg:max-w-[1180px] lg:mx-auto">
+    <h1 class="font-oswald text-2xl font-bold uppercase mb-4 lg:text-4xl lg:mb-1">Material</h1>
+    <div class="hidden lg:block w-[60px] h-1.5 bg-orange my-3.5"></div>
 
-  <div class="flex gap-2 mb-6 flex-wrap">
-    <button type="button" (click)="setFilter('ALL')"
-            class="font-oswald text-xs uppercase tracking-wide px-3 py-1.5 rounded-full border"
-            [class]="filter() === 'ALL' ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
-      Todo
-    </button>
-    <button type="button" (click)="setFilter('NETWORK')"
-            class="font-oswald text-xs uppercase tracking-wide px-3 py-1.5 rounded-full border"
-            [class]="filter() === 'NETWORK' ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
-      Toda la red
-    </button>
-    @if (userProfile()) {
-      <button type="button" (click)="setFilter(userProfile()!)"
+    <div class="flex gap-2 mb-6 flex-wrap lg:mb-5">
+      <button type="button" (click)="setFilter('ALL')"
               class="font-oswald text-xs uppercase tracking-wide px-3 py-1.5 rounded-full border"
-              [class]="filter() === userProfile() ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
-        {{ userProfileLabel() }}
+              [class]="filter() === 'ALL' ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+        Todo
       </button>
-    }
-  </div>
+      <button type="button" (click)="setFilter('NETWORK')"
+              class="font-oswald text-xs uppercase tracking-wide px-3 py-1.5 rounded-full border"
+              [class]="filter() === 'NETWORK' ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+        Toda la red
+      </button>
+      @if (userProfile()) {
+        <button type="button" (click)="setFilter(userProfile()!)"
+                class="font-oswald text-xs uppercase tracking-wide px-3 py-1.5 rounded-full border"
+                [class]="filter() === userProfile() ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+          {{ userProfileLabel() }}
+        </button>
+      }
+    </div>
 
-  <div class="flex flex-col gap-3">
-    @for (m of filtered(); track m.id) {
-      <div class="border border-line-2 rounded-xl p-4">
-        <div class="flex items-center justify-between">
-          <span class="font-oswald text-xs bg-line-4 rounded px-2 py-1">{{ m.type }}</span>
-          <span class="font-oswald text-xs uppercase text-muted-3">{{ visibilityLabel(m) }}</span>
+    <div class="flex flex-col gap-3 lg:grid lg:grid-cols-3 lg:gap-[18px]">
+      @for (m of filtered(); track m.id) {
+        <div class="border border-line-2 rounded-xl p-4 lg:bg-white lg:border-0 lg:rounded-[18px] lg:p-[22px] lg:flex lg:flex-col lg:gap-4">
+          <div class="flex items-center justify-between">
+            <span class="font-oswald text-xs bg-line-4 rounded px-2 py-1">{{ m.type }}</span>
+            <span class="font-oswald text-xs uppercase text-muted-3 lg:hidden">{{ visibilityLabel(m) }}</span>
+          </div>
+          <p class="font-oswald font-medium mt-2">{{ m.title }}</p>
+          <p class="text-muted-3 text-xs">{{ m.meta }}</p>
+          <div class="hidden lg:flex lg:items-center lg:justify-between lg:pt-3.5 lg:border-t lg:border-line-3 lg:mt-auto">
+            <span class="font-oswald text-xs uppercase text-muted-3">{{ visibilityLabel(m) }}</span>
+            <a [href]="m.driveUrl" target="_blank"
+               class="font-oswald text-xs tracking-[.12em] uppercase text-dark border-b-2 border-orange pb-0.5 whitespace-nowrap">
+              Descargar
+            </a>
+          </div>
+          <a [href]="m.driveUrl" target="_blank" class="lg:hidden inline-block mt-2 text-orange text-sm hover:text-orange-hover">
+            Descargar
+          </a>
         </div>
-        <p class="font-oswald font-medium mt-2">{{ m.title }}</p>
-        <p class="text-muted-3 text-xs">{{ m.meta }}</p>
-        <a [href]="m.driveUrl" target="_blank" class="inline-block mt-2 text-orange text-sm hover:text-orange-hover">
-          Descargar
-        </a>
-      </div>
-    } @empty {
-      <p class="text-muted-2 text-sm">No hay material disponible.</p>
-    }
+      } @empty {
+        <p class="text-muted-2 text-sm">No hay material disponible.</p>
+      }
+    </div>
   </div>
 </div>

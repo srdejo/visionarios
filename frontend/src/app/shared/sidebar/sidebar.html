@@ -1,0 +1,44 @@
+@if (visible()) {
+  <aside class="hidden lg:flex lg:flex-col lg:h-full lg:w-[260px] lg:flex-none bg-dark px-5 py-7 gap-7">
+    <div class="flex items-center gap-3">
+      <img src="logo-mi-white.png" alt="Mi Casa Church" class="w-10" />
+      <div>
+        <div class="font-oswald font-semibold text-[13px] tracking-[.16em] uppercase text-white">Visionarios</div>
+        <div class="text-xs text-muted-3">Mi Casa Church</div>
+      </div>
+    </div>
+
+    <nav class="flex flex-col gap-1">
+      @for (n of nav(); track n.label) {
+        <a [routerLink]="n.path"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors"
+           [class]="isActive(n) ? 'bg-white/10 text-white' : 'text-muted-4 hover:text-white hover:bg-white/5'">
+          <i class="{{ n.icon }} fa-solid text-base w-[22px] text-center"></i>
+          <span class="font-oswald text-[13px] tracking-[.12em] uppercase">{{ n.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="mt-auto pt-5 border-t border-white/10 flex flex-col gap-3">
+      <div class="flex items-center gap-3">
+        <span class="flex-none w-[38px] h-[38px] rounded-full bg-white/10 text-orange font-oswald text-[13px] flex items-center justify-center">
+          {{ initials() }}
+        </span>
+        <div class="min-w-0">
+          <div class="text-sm font-semibold text-white truncate">{{ user()?.fullName }}</div>
+          <div class="text-xs text-orange tracking-[.06em] uppercase">{{ roleLabel() }}</div>
+        </div>
+      </div>
+      <button type="button" (click)="showLogoutConfirm.set(true)"
+              class="flex items-center gap-2 px-1 text-muted-4 hover:text-white text-xs font-oswald tracking-[.1em] uppercase cursor-pointer">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  @if (showLogoutConfirm()) {
+    <app-confirm-modal title="Cerrar sesión" message="¿Seguro que quieres cerrar tu sesión?"
+                        confirmLabel="Cerrar sesión" (confirm)="logout()" (cancel)="showLogoutConfirm.set(false)" />
+  }
+}

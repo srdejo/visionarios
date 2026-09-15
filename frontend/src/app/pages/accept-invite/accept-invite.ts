@@ -3,10 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { Profile } from '../../core/models';
+import { PasswordInput } from '../../shared/password-input/password-input';
 
 @Component({
   selector: 'app-accept-invite',
-  imports: [FormsModule],
+  imports: [FormsModule, PasswordInput],
   templateUrl: './accept-invite.html',
 })
 export class AcceptInvite {

@@ -1,40 +1,68 @@
-<div class="min-h-screen bg-white px-6 py-8 pb-24">
-  <p class="font-oswald text-xs uppercase tracking-[.1em] text-orange">Administrador</p>
-  <div class="flex justify-between items-center mt-1 mb-6">
-    <h1 class="font-oswald text-2xl font-bold uppercase">Eventos</h1>
-    <button type="button" (click)="openCreate()"
-            class="w-10 h-10 rounded-full bg-dark text-white text-xl leading-none flex items-center justify-center">
-      +
-    </button>
-  </div>
+<div class="min-h-screen bg-white px-6 py-8 pb-24 lg:pb-14 lg:bg-[#F4F2EF] lg:px-10">
+  <div class="lg:max-w-[1180px] lg:mx-auto">
+    <div class="lg:flex lg:flex-wrap lg:gap-4 lg:items-end lg:justify-between">
+      <div>
+        <p class="font-oswald text-xs uppercase tracking-[.1em] text-orange-hover lg:text-[11px] lg:tracking-[.2em]">Administrador</p>
+        <h1 class="font-oswald text-2xl font-bold uppercase mt-1 mb-6 lg:text-4xl lg:mt-0 lg:mb-0">Eventos</h1>
+      </div>
+      <button type="button" (click)="openCreate()" aria-label="Nuevo evento"
+              class="w-10 h-10 rounded-full bg-dark text-white flex items-center justify-center lg:hidden">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <button type="button" (click)="openCreate()"
+              class="hidden lg:flex lg:items-center lg:gap-2 h-[50px] px-6 rounded-xl bg-dark text-white font-oswald text-sm tracking-[.12em] uppercase">
+        <i class="fa-solid fa-plus text-xs"></i> Nuevo evento
+      </button>
+    </div>
 
-  <div class="flex flex-col gap-3">
-    @for (ev of events(); track ev.id) {
-      <div class="border border-line-2 rounded-xl p-4">
-        <div class="flex justify-between items-start">
-          <p class="font-oswald font-medium">{{ ev.title }}</p>
-          <span class="font-oswald text-xs uppercase px-2 py-1 rounded-full bg-line-4 text-muted-1">
+    <div class="flex flex-col gap-3 lg:bg-white lg:rounded-[18px] lg:gap-0 lg:mt-6 lg:overflow-hidden">
+      <div class="hidden lg:grid lg:grid-cols-[2.2fr_1.4fr_130px_120px] lg:gap-4 lg:px-6 lg:py-4 lg:bg-[#FAF8F6] lg:border-b lg:border-line-2">
+        <span class="font-oswald text-[11px] tracking-[.14em] uppercase text-muted-1">Evento</span>
+        <span class="font-oswald text-[11px] tracking-[.14em] uppercase text-muted-1">Fecha</span>
+        <span class="font-oswald text-[11px] tracking-[.14em] uppercase text-muted-1">Confirmados</span>
+        <span class="font-oswald text-[11px] tracking-[.14em] uppercase text-muted-1">Visible para</span>
+      </div>
+      @for (ev of events(); track ev.id) {
+        <div class="border border-line-2 rounded-xl p-4 lg:border-0 lg:border-b lg:border-line-3 lg:rounded-none lg:grid lg:grid-cols-[2.2fr_1.4fr_130px_120px] lg:gap-4 lg:items-center lg:px-6 lg:py-4">
+          <div class="lg:min-w-0">
+            <div class="flex justify-between items-start">
+              <p class="font-oswald font-medium lg:truncate">{{ ev.title }}</p>
+              <span class="font-oswald text-xs uppercase px-2 py-1 rounded-full bg-line-4 text-muted-1 lg:hidden">
+                {{ targetLabel(ev) }}
+              </span>
+            </div>
+            <p class="text-muted-3 text-xs mt-1 lg:hidden">{{ dateLabel(ev.startsAt) }} · {{ ev.place }}</p>
+            <p class="text-muted-3 text-xs mt-1 hidden lg:block">{{ ev.place }}</p>
+          </div>
+          <button type="button" (click)="openAttendees(ev)"
+                  class="text-left text-muted-2 text-sm mt-1 underline underline-offset-2 lg:hidden">
+            Confirmados: {{ ev.confirmedCount }}
+          </button>
+          <p class="hidden lg:block lg:text-sm lg:text-muted-2">{{ dateLabel(ev.startsAt) }}</p>
+          <button type="button" (click)="openAttendees(ev)"
+                  class="hidden lg:block lg:font-semibold lg:underline lg:underline-offset-2 lg:text-left lg:w-fit">
+            {{ ev.confirmedCount }}
+          </button>
+          <span class="hidden lg:inline-block font-oswald text-xs uppercase px-2 py-1 rounded-full bg-line-4 text-muted-1 justify-self-start">
             {{ targetLabel(ev) }}
           </span>
+          <div class="flex items-center gap-4 mt-2 lg:col-span-4 lg:mt-3">
+            <button type="button" (click)="openEdit(ev)" class="text-orange text-sm hover:text-orange-hover">
+              Editar
+            </button>
+            <button type="button" (click)="notify(ev)" [disabled]="notifyingId() === ev.id"
+                    class="text-orange text-sm hover:text-orange-hover disabled:opacity-50">
+              {{ notifyingId() === ev.id ? 'Enviando…' : 'Enviar invitación por correo' }}
+            </button>
+            @if (notifiedId() === ev.id) {
+              <span class="text-muted-2 text-xs">Enviado ✓</span>
+            }
+          </div>
         </div>
-        <p class="text-muted-3 text-xs mt-1">{{ dateLabel(ev.startsAt) }} · {{ ev.place }}</p>
-        <p class="text-muted-2 text-sm mt-1">Confirmados: {{ ev.confirmedCount }}</p>
-        <div class="flex items-center gap-4 mt-2">
-          <button type="button" (click)="openEdit(ev)" class="text-orange text-sm hover:text-orange-hover">
-            Editar
-          </button>
-          <button type="button" (click)="notify(ev)" [disabled]="notifyingId() === ev.id"
-                  class="text-orange text-sm hover:text-orange-hover disabled:opacity-50">
-            {{ notifyingId() === ev.id ? 'Enviando…' : 'Enviar invitación por correo' }}
-          </button>
-          @if (notifiedId() === ev.id) {
-            <span class="text-muted-2 text-xs">Enviado ✓</span>
-          }
-        </div>
-      </div>
-    } @empty {
-      <p class="text-muted-2 text-sm">No hay eventos creados.</p>
-    }
+      } @empty {
+        <p class="text-muted-2 text-sm p-4">No hay eventos creados.</p>
+      }
+    </div>
   </div>
 </div>
 
@@ -79,15 +107,60 @@
         </div>
       </div>
 
+      @if (saveError()) {
+        <p class="text-danger text-sm">{{ saveError() }}</p>
+      }
+
       <div class="flex gap-3 mt-4">
-        <button type="button" (click)="showModal.set(false)"
-                class="flex-1 border border-line-1 font-oswald uppercase tracking-wide py-3 rounded-lg">
+        <button type="button" (click)="showModal.set(false)" [disabled]="saving()"
+                class="flex-1 border border-line-1 font-oswald uppercase tracking-wide py-3 rounded-lg disabled:opacity-50">
           Cancelar
         </button>
-        <button type="submit" class="flex-1 bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg">
-          Guardar
+        <button type="submit" [disabled]="saving()"
+                class="flex-1 bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg disabled:opacity-50">
+          {{ saving() ? 'Guardando…' : 'Guardar' }}
         </button>
       </div>
     </form>
+  </app-bottom-sheet>
+}
+
+@if (attendeesEvent(); as ev) {
+  <app-bottom-sheet [title]="'Confirmados · ' + ev.title" (close)="closeAttendees()">
+    <div class="flex flex-col gap-3">
+      @if (attendeesLoading()) {
+        <p class="text-muted-2 text-sm py-4 text-center">Cargando…</p>
+      } @else if (attendees(); as list) {
+        @for (u of list; track u.id) {
+          <div class="flex items-center gap-3 border border-line-2 rounded-xl p-3">
+            <div class="w-10 h-10 rounded-full bg-dark text-white flex items-center justify-center font-oswald text-sm flex-none">
+              {{ initials(u) }}
+            </div>
+            <div class="min-w-0">
+              <p class="font-oswald font-medium truncate">{{ u.fullName }}</p>
+              <p class="text-muted-3 text-xs truncate">{{ u.email }}</p>
+            </div>
+            <span class="ml-auto font-oswald text-xs uppercase px-2 py-1 rounded-full bg-line-4 text-muted-1 flex-none">
+              {{ profileLabel(u) }}
+            </span>
+          </div>
+        } @empty {
+          <p class="text-muted-2 text-sm py-4 text-center">Nadie ha confirmado asistencia todavía.</p>
+        }
+        @if (attendeesTotalPages() > 1) {
+          <div class="flex items-center justify-between gap-3 mt-2">
+            <button type="button" (click)="attendeesPrevPage()" [disabled]="attendeesPage() === 0"
+                    class="font-oswald text-xs uppercase px-4 py-2 rounded-lg border border-line-1 text-muted-1 disabled:opacity-40">
+              Anterior
+            </button>
+            <span class="text-xs text-muted-3 uppercase font-oswald tracking-wide">Página {{ attendeesPage() + 1 }} de {{ attendeesTotalPages() }}</span>
+            <button type="button" (click)="attendeesNextPage()" [disabled]="attendeesPage() + 1 === attendeesTotalPages()"
+                    class="font-oswald text-xs uppercase px-4 py-2 rounded-lg border border-line-1 text-muted-1 disabled:opacity-40">
+              Siguiente
+            </button>
+          </div>
+        }
+      }
+    </div>
   </app-bottom-sheet>
 }

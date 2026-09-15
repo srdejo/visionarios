@@ -1,2 +1,7 @@
-<router-outlet></router-outlet>
+<div class="lg:flex lg:min-h-screen lg:items-stretch">
+  <app-sidebar></app-sidebar>
+  <div class="lg:flex-1 lg:min-w-0">
+    <router-outlet></router-outlet>
+  </div>
+</div>
 <app-bottom-nav></app-bottom-nav>

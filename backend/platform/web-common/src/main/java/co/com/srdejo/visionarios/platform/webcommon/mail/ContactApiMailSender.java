@@ -40,6 +40,16 @@ public class ContactApiMailSender implements MailSender {
     }
 
     @Override
+    public void sendEmailVerification(String toEmail, String recipientName, String verifyLink) {
+        String html = templateRenderer.render("mail-templates/verify-email.html", Map.of(
+                "recipientName", recipientName,
+                "link", verifyLink,
+                "linkDisplay", stripProtocol(verifyLink)
+        ));
+        send(toEmail, "Confirma tu correo · Red de Visionarios", html);
+    }
+
+    @Override
     public void sendAdminInvite(String toEmail, String inviterName, String inviteLink) {
         String html = templateRenderer.render("mail-templates/invite-admin.html", Map.of(
                 "inviterName", inviterName,

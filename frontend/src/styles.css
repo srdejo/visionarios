@@ -9,3 +9,11 @@ html, body {
 .font-oswald {
   font-family: Oswald, sans-serif;
 }
+
+button:not(:disabled), [role='button'], a, select, input[type='checkbox'], input[type='radio'] {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}

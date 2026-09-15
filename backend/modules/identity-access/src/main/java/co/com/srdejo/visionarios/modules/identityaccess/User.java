@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -36,6 +37,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Profile profile;
+
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "business_category")
+    private BusinessCategory businessCategory;
 
     // Profesional
     @Column(name = "profession")
@@ -68,6 +76,9 @@ public class User {
     @Column(name = "unsubscribe_token", nullable = false, unique = true)
     private String unsubscribeToken;
 
+    @Column(nullable = false)
+    private boolean verified;
+
     protected User() {
     }
 
@@ -82,6 +93,7 @@ public class User {
         this.createdAt = Instant.now();
         this.emailOptOut = false;
         this.unsubscribeToken = UUID.randomUUID().toString();
+        this.verified = true;
     }
 
     public UUID getId() {
@@ -92,8 +104,16 @@ public class User {
         return fullName;
     }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public String getPhone() {
         return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -110,6 +130,22 @@ public class User {
 
     public Profile getProfile() {
         return profile;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public BusinessCategory getBusinessCategory() {
+        return businessCategory;
+    }
+
+    public void setBusinessCategory(BusinessCategory businessCategory) {
+        this.businessCategory = businessCategory;
     }
 
     public String getProfession() {
@@ -198,5 +234,17 @@ public class User {
 
     public void optOutOfEmails() {
         this.emailOptOut = true;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void markUnverified() {
+        this.verified = false;
+    }
+
+    public void markVerified() {
+        this.verified = true;
     }
 }

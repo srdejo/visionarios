@@ -1,29 +1,149 @@
-<div class="min-h-screen bg-white px-6 py-10 pb-24">
-  <div class="flex flex-col items-center text-center">
-    <div class="w-20 h-20 rounded-full bg-dark text-white flex items-center justify-center font-oswald text-2xl">
-      {{ initials() }}
-    </div>
-    <p class="font-oswald text-xl font-semibold mt-4 w-full truncate text-center">{{ user()?.fullName }}</p>
-    <p class="text-muted-2 text-sm">{{ user()?.email }}</p>
-  </div>
+<div class="min-h-screen bg-white px-6 py-10 pb-24 lg:pb-14 lg:bg-[#F4F2EF] lg:px-10">
+  <div class="lg:max-w-[720px] lg:mx-auto">
+    <h1 class="hidden lg:block font-oswald text-4xl font-bold uppercase">Mi perfil</h1>
+    <div class="hidden lg:block w-[60px] h-1.5 bg-orange my-3.5"></div>
 
-  <div class="mt-8 flex flex-col divide-y divide-line-2 border-y border-line-2">
-    <div class="flex justify-between py-3">
-      <span class="font-oswald text-xs uppercase tracking-wide text-muted-1">Perfil</span>
-      <span class="text-sm">{{ profileLabel() }}</span>
-    </div>
-    <div class="flex justify-between py-3">
-      <span class="font-oswald text-xs uppercase tracking-wide text-muted-1">Celular</span>
-      <span class="text-sm">{{ user()?.phone }}</span>
-    </div>
-    <div class="flex justify-between py-3">
-      <span class="font-oswald text-xs uppercase tracking-wide text-muted-1">Miembro desde</span>
-      <span class="text-sm">{{ memberSince() }}</span>
+    <div class="lg:bg-white lg:rounded-[20px] lg:p-7">
+      <div class="flex flex-col items-center text-center lg:flex-row lg:items-center lg:text-left lg:gap-4.5">
+        <div class="w-20 h-20 rounded-full bg-dark text-white flex items-center justify-center font-oswald text-2xl lg:flex-none lg:w-[66px] lg:h-[66px]">
+          {{ initials() }}
+        </div>
+        <div class="lg:min-w-0">
+          <p class="font-oswald text-xl font-semibold mt-4 w-full truncate text-center lg:mt-0 lg:text-2xl lg:text-left">{{ user()?.fullName }}</p>
+          <p class="text-muted-2 text-sm">{{ user()?.email }}</p>
+        </div>
+        <span class="lg:ml-auto self-center mt-3 lg:mt-0 bg-orange text-dark font-oswald text-xs tracking-[.1em] uppercase px-3 py-1 rounded-full">
+          {{ profileLabel() }}
+        </span>
+      </div>
+
+      <form class="flex flex-col gap-4 mt-8 lg:mt-6" (ngSubmit)="save()">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="lg:col-span-2">
+            <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Nombre completo</label>
+            <input name="fullName" [(ngModel)]="fullName" required
+                   class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+          </div>
+          <div>
+            <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Celular</label>
+            <input name="phone" [(ngModel)]="phone" required
+                   class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+          </div>
+          <div>
+            <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Fecha de nacimiento</label>
+            <input type="date" name="birthDate" [(ngModel)]="birthDate"
+                   class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+          </div>
+          <div>
+            <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Correo</label>
+            <input [value]="user()?.email" disabled
+                   class="mt-1 w-full bg-line-3 border border-line-1 rounded-lg px-3 py-2 text-muted-2 outline-none" />
+          </div>
+          <div>
+            <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Miembro desde</label>
+            <input [value]="memberSince()" disabled
+                   class="mt-1 w-full bg-line-3 border border-line-1 rounded-lg px-3 py-2 text-muted-2 outline-none" />
+          </div>
+        </div>
+
+        @if (user()?.profile === 'PROFESIONAL') {
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div>
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Profesión</label>
+              <input name="profession" [(ngModel)]="profession"
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+            <div>
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Años de experiencia</label>
+              <input type="number" name="yearsExperience" [(ngModel)]="yearsExperience"
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+            <div class="lg:col-span-2">
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Empresa actual</label>
+              <input name="currentCompany" [(ngModel)]="currentCompany"
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+          </div>
+        }
+
+        @if (user()?.profile === 'EMPRENDEDOR') {
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div>
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Producto o negocio</label>
+              <input name="businessProduct" [(ngModel)]="businessProduct"
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+            <div>
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Tiempo operando</label>
+              <input name="operatingTime" [(ngModel)]="operatingTime"
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+            <div class="lg:col-span-2">
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Categoría del negocio</label>
+              <select name="businessCategory" [(ngModel)]="businessCategory"
+                      class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none">
+                <option [ngValue]="null">Selecciona una categoría</option>
+                @for (opt of businessCategoryOptions; track opt.value) {
+                  <option [ngValue]="opt.value">{{ opt.label }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        }
+
+        @if (user()?.profile === 'EMPRESARIO') {
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div>
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Empresa</label>
+              <input name="companyName" [(ngModel)]="companyName"
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+            <div>
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Número de empleados</label>
+              <input type="number" name="employeeCount" [(ngModel)]="employeeCount"
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+            <div>
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Años con la empresa</label>
+              <input type="number" name="yearsWithCompany" [(ngModel)]="yearsWithCompany"
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+            <div>
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Categoría de la empresa</label>
+              <select name="businessCategory" [(ngModel)]="businessCategory"
+                      class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none">
+                <option [ngValue]="null">Selecciona una categoría</option>
+                @for (opt of businessCategoryOptions; track opt.value) {
+                  <option [ngValue]="opt.value">{{ opt.label }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        }
+
+        @if (saveError()) {
+          <p class="text-danger text-sm">{{ saveError() }}</p>
+        }
+        @if (saved()) {
+          <p class="text-sm text-muted-2">Cambios guardados ✓</p>
+        }
+
+        <div class="flex flex-col lg:flex-row gap-3 mt-2">
+          <button type="submit" [disabled]="saving()"
+                  class="bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg disabled:opacity-50 lg:w-auto lg:px-8">
+            {{ saving() ? 'Guardando…' : 'Guardar cambios' }}
+          </button>
+          <button type="button" (click)="showLogoutConfirm.set(true)"
+                  class="border border-line-1 text-danger font-oswald uppercase tracking-wide py-3 rounded-lg lg:w-auto lg:px-6">
+            Cerrar sesión
+          </button>
+        </div>
+      </form>
     </div>
   </div>
-
-  <button type="button" (click)="logout()"
-          class="w-full mt-10 border border-line-1 text-danger font-oswald uppercase tracking-wide py-3 rounded-lg">
-    Cerrar sesión
-  </button>
 </div>
+
+@if (showLogoutConfirm()) {
+  <app-confirm-modal title="Cerrar sesión" message="¿Seguro que quieres cerrar tu sesión?"
+                      confirmLabel="Cerrar sesión" (confirm)="logout()" (cancel)="showLogoutConfirm.set(false)" />
+}

@@ -5,6 +5,8 @@ import {
   ApiResponse,
   AuthResponse,
   RegisterRequest,
+  RegisterResponse,
+  UpdateProfileRequest,
   UserResponse,
 } from './models';
 
@@ -32,18 +34,20 @@ export class AuthService {
       .pipe(tap((res) => this.persistSession(res)));
   }
 
-  register(payload: RegisterRequest): Observable<ApiResponse<AuthResponse>> {
-    return this.http
-      .post<ApiResponse<AuthResponse>>('/api/auth/register', payload)
-      .pipe(tap((res) => this.persistSession(res)));
+  register(payload: RegisterRequest): Observable<ApiResponse<RegisterResponse>> {
+    return this.http.post<ApiResponse<RegisterResponse>>('/api/auth/register', payload);
   }
 
   forgotPassword(email: string): Observable<ApiResponse<null>> {
     return this.http.post<ApiResponse<null>>('/api/auth/forgot-password', { email });
   }
 
-  resetPassword(token: string, password: string): Observable<ApiResponse<null>> {
-    return this.http.post<ApiResponse<null>>('/api/auth/reset-password', { token, password });
+  resetPassword(token: string, password: string, confirmPassword: string): Observable<ApiResponse<null>> {
+    return this.http.post<ApiResponse<null>>('/api/auth/reset-password', { token, password, confirmPassword });
+  }
+
+  verifyEmail(token: string): Observable<ApiResponse<null>> {
+    return this.http.post<ApiResponse<null>>(`/api/auth/verify-email/${token}`, {});
   }
 
   acceptInvite(
@@ -57,13 +61,21 @@ export class AuthService {
 
   fetchMe(): Observable<ApiResponse<UserResponse>> {
     return this.http.get<ApiResponse<UserResponse>>('/api/users/me').pipe(
-      tap((res) => {
-        if (res.success && res.data) {
-          this.currentUserSignal.set(res.data);
-          localStorage.setItem(USER_KEY, JSON.stringify(res.data));
-        }
-      }),
+      tap((res) => this.persistUser(res)),
     );
+  }
+
+  updateProfile(payload: UpdateProfileRequest): Observable<ApiResponse<UserResponse>> {
+    return this.http
+      .put<ApiResponse<UserResponse>>('/api/users/me', payload)
+      .pipe(tap((res) => this.persistUser(res)));
+  }
+
+  private persistUser(res: ApiResponse<UserResponse>): void {
+    if (res.success && res.data) {
+      this.currentUserSignal.set(res.data);
+      localStorage.setItem(USER_KEY, JSON.stringify(res.data));
+    }
   }
 
   logout(): void {

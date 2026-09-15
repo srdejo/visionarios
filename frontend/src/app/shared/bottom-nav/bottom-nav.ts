@@ -1,12 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { RouterLink, Router, NavigationEnd } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-bottom-nav',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink],
   templateUrl: './bottom-nav.html',
 })
 export class BottomNav {
@@ -23,6 +23,11 @@ export class BottomNav {
   );
 
   readonly isAdmin = computed(() => this.auth.isAdmin());
+
+  isActive(path: string, ...extra: string[]): boolean {
+    const u = this.url();
+    return u.startsWith(path) || extra.some((p) => u.startsWith(p));
+  }
 
   readonly visible = computed(() => {
     const u = this.url();

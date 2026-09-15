@@ -14,8 +14,7 @@
     </div>
     <div>
       <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Contraseña</label>
-      <input type="password" name="password" [(ngModel)]="password" required minlength="8"
-             class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 outline-none" />
+      <app-password-input class="mt-1 block" name="password" [(ngModel)]="password" [required]="true" [minLength]="8" />
     </div>
     <div>
       <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Perfil</label>

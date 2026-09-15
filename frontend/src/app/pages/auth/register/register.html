@@ -1,152 +1,198 @@
-<div class="min-h-screen bg-white px-6 py-8 pb-16">
+<div class="min-h-screen bg-white flex flex-col lg:flex-row">
+  <app-auth-hero></app-auth-hero>
 
-  @if (step() <= 3) {
-    <div class="flex items-center justify-between">
-      <button type="button" (click)="back()" class="text-muted-1 text-sm">← Atrás</button>
-      <span class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Paso {{ step() }} de 4</span>
-    </div>
+  <div class="flex-1 px-6 py-8 pb-16 lg:flex lg:items-center lg:justify-center lg:px-14 lg:py-10">
+    <div class="lg:w-full lg:max-w-[520px]">
 
-    <div class="flex gap-1 mt-4 mb-8">
-      @for (n of [1, 2, 3, 4]; track n) {
-        <div class="h-1 flex-1 rounded-full" [class]="n <= step() ? 'bg-orange' : 'bg-line-2'"></div>
+      @if (step() <= 3) {
+        <div class="flex items-center justify-between">
+          <button type="button" (click)="back()" class="text-muted-1 text-sm">← Atrás</button>
+          <span class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Paso {{ step() }} de 4</span>
+        </div>
+
+        <div class="flex gap-1 mt-4 mb-8">
+          @for (n of [1, 2, 3, 4]; track n) {
+            <div class="h-1 flex-1 rounded-full" [class]="n <= step() ? 'bg-orange' : 'bg-line-2'"></div>
+          }
+        </div>
       }
-    </div>
-  }
 
-  @if (step() === 1) {
-    <h1 class="font-oswald text-2xl font-bold uppercase mb-6">Tus datos</h1>
-    <form class="flex flex-col gap-4" (ngSubmit)="goStep1to2()">
-      <div>
-        <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Nombre completo</label>
-        <input name="fullName" [(ngModel)]="fullName" required
-               class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
-      </div>
-      <div>
-        <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Celular</label>
-        <input name="phone" [(ngModel)]="phone" required
-               class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
-      </div>
-      <div>
-        <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Correo</label>
-        <input type="email" name="email" [(ngModel)]="email" required
-               class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
-      </div>
-      <div>
-        <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Contraseña (mín. 8 caracteres)</label>
-        <input type="password" name="password" [(ngModel)]="password" required minlength="8"
-               class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
-      </div>
-      <button type="submit" class="bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg mt-2">
-        Continuar
-      </button>
-    </form>
-  }
+      @if (step() === 1) {
+        <h1 class="font-oswald text-2xl font-bold uppercase mb-6 lg:text-[32px]">Tus datos</h1>
+        <form class="flex flex-col gap-4" (ngSubmit)="goStep1to2()">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="lg:col-span-2">
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Nombre completo</label>
+              <input name="fullName" [(ngModel)]="fullName" required
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+            <div>
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Celular</label>
+              <input name="phone" [(ngModel)]="phone" required
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+            <div>
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Correo</label>
+              <input type="email" name="email" [(ngModel)]="email" required
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+            <div class="lg:col-span-2">
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Contraseña (mín. 8 caracteres)</label>
+              <app-password-input class="mt-1 block" name="password" [(ngModel)]="password" [required]="true" [minLength]="8" />
+            </div>
+            <div class="lg:col-span-2">
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Confirmar contraseña</label>
+              <app-password-input class="mt-1 block" name="confirmPassword" [(ngModel)]="confirmPassword" [required]="true" [minLength]="8" />
+            </div>
+            <div>
+              <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Fecha de nacimiento</label>
+              <input type="date" name="birthDate" [(ngModel)]="birthDate"
+                     class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+            </div>
+          </div>
+          @if (error()) {
+            <p class="text-danger text-sm">{{ error() }}</p>
+          }
+          <button type="submit" class="bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg mt-2">
+            Continuar
+          </button>
+        </form>
+      }
 
-  @if (step() === 2) {
-    <h1 class="font-oswald text-2xl font-bold uppercase mb-6">¿Cómo te identificas hoy?</h1>
-    <div class="flex flex-col gap-4">
-      @for (card of profileCards; track card.value) {
-        <button type="button" (click)="selectProfile(card.value)"
-                class="text-left rounded-xl border p-4 transition-all"
-                [class]="selectedProfile() === card.value
-                  ? 'border-dark shadow-[inset_4px_0_0_0_#FAA61A]'
-                  : 'border-line-1'">
-          <p class="font-oswald text-lg font-semibold uppercase">{{ card.label }}</p>
-          <p class="text-muted-2 text-sm mt-1">{{ card.description }}</p>
+      @if (step() === 2) {
+        <h1 class="font-oswald text-2xl font-bold uppercase mb-6 lg:text-[32px]">¿Cómo te identificas hoy?</h1>
+        <div class="flex flex-col gap-4 lg:grid lg:grid-cols-3">
+          @for (card of profileCards; track card.value) {
+            <button type="button" (click)="selectProfile(card.value)"
+                    class="text-left rounded-xl border p-4 transition-all"
+                    [class]="selectedProfile() === card.value
+                      ? 'border-dark shadow-[inset_4px_0_0_0_#FAA61A]'
+                      : 'border-line-1'">
+              <p class="font-oswald text-lg font-semibold uppercase">{{ card.label }}</p>
+              <p class="text-muted-2 text-sm mt-1">{{ card.description }}</p>
+            </button>
+          }
+        </div>
+        <button type="button" (click)="goStep2to3()" [disabled]="!selectedProfile()"
+                class="w-full bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg mt-8 disabled:opacity-50">
+          Continuar
         </button>
       }
+
+      @if (step() === 3) {
+        <span class="inline-block bg-orange text-dark font-oswald text-xs tracking-[.1em] uppercase px-3 py-1 rounded-full mb-4">
+          {{ profileLabel() }}
+        </span>
+        <h1 class="font-oswald text-2xl font-bold uppercase mb-6 lg:text-[32px]">Cuéntanos un poco más</h1>
+
+        <form class="flex flex-col gap-4" (ngSubmit)="submitRegistration()">
+          @if (selectedProfile() === 'PROFESIONAL') {
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div>
+                <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Profesión</label>
+                <input name="profession" [(ngModel)]="profession" required
+                       class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+              </div>
+              <div>
+                <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Años de experiencia</label>
+                <input type="number" name="yearsExperience" [(ngModel)]="yearsExperience"
+                       class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+              </div>
+              <div>
+                <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Empresa actual</label>
+                <input name="currentCompany" [(ngModel)]="currentCompany" [disabled]="searchingJob()"
+                       class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none disabled:opacity-50" />
+              </div>
+            </div>
+            <label class="flex items-center gap-2 text-sm text-muted-1">
+              <input type="checkbox" name="searchingJob" [ngModel]="searchingJob()" (ngModelChange)="setSearchingJob($event)" />
+              Actualmente en búsqueda de empleo
+            </label>
+          }
+
+          @if (selectedProfile() === 'EMPRENDEDOR') {
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div>
+                <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Producto o negocio</label>
+                <input name="businessProduct" [(ngModel)]="businessProduct" required
+                       class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+              </div>
+              <div>
+                <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Tiempo operando</label>
+                <input name="operatingTime" [(ngModel)]="operatingTime"
+                       class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+              </div>
+              <div class="lg:col-span-2">
+                <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Categoría del negocio</label>
+                <select name="businessCategory" [(ngModel)]="businessCategory"
+                        class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none">
+                  <option [ngValue]="null">Selecciona una categoría</option>
+                  @for (opt of businessCategoryOptions; track opt.value) {
+                    <option [ngValue]="opt.value">{{ opt.label }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          }
+
+          @if (selectedProfile() === 'EMPRESARIO') {
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div>
+                <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Empresa</label>
+                <input name="companyName" [(ngModel)]="companyName" required
+                       class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+              </div>
+              <div>
+                <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Número de empleados</label>
+                <input type="number" name="employeeCount" [(ngModel)]="employeeCount"
+                       class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+              </div>
+              <div>
+                <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Años con la empresa</label>
+                <input type="number" name="yearsWithCompany" [(ngModel)]="yearsWithCompany"
+                       class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+              </div>
+              <div class="lg:col-span-2">
+                <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Categoría de la empresa</label>
+                <select name="businessCategory" [(ngModel)]="businessCategory"
+                        class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none">
+                  <option [ngValue]="null">Selecciona una categoría</option>
+                  @for (opt of businessCategoryOptions; track opt.value) {
+                    <option [ngValue]="opt.value">{{ opt.label }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          }
+
+          @if (error()) {
+            <p class="text-danger text-sm">{{ error() }}</p>
+          }
+
+          <button type="submit" [disabled]="loading()"
+                  class="bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg mt-2 disabled:opacity-50">
+            Crear mi cuenta
+          </button>
+        </form>
+      }
+
+      @if (step() === 4) {
+        <div class="flex flex-col items-center text-center mt-12 lg:mt-0">
+          <img src="logo-mi-crop.png" alt="Mi Casa Church" class="h-16 w-auto mb-4" />
+          <p class="font-oswald text-xs tracking-[.1em] uppercase text-muted-1">Mi Casa Church</p>
+          <p class="font-script text-4xl mt-6">Bienvenido</p>
+          <h1 class="font-oswald text-3xl font-bold uppercase">A LA RED</h1>
+          <p class="text-muted-2 text-sm mt-6 max-w-sm">
+            Tu cuenta quedó creada como <strong>{{ profileLabel() }}</strong>. Te enviamos un correo con un enlace
+            para confirmar tu cuenta: haz clic en él para poder iniciar sesión. Si no lo confirmas dentro de las
+            próximas 24 horas, tu cuenta será eliminada automáticamente.
+          </p>
+          <button type="button" (click)="enterNetwork()"
+                  class="w-full lg:max-w-[320px] bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg mt-10">
+            Ir a iniciar sesión
+          </button>
+        </div>
+      }
     </div>
-    <button type="button" (click)="goStep2to3()" [disabled]="!selectedProfile()"
-            class="w-full bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg mt-8 disabled:opacity-50">
-      Continuar
-    </button>
-  }
-
-  @if (step() === 3) {
-    <span class="inline-block bg-orange text-dark font-oswald text-xs tracking-[.1em] uppercase px-3 py-1 rounded-full mb-4">
-      {{ profileLabel() }}
-    </span>
-    <h1 class="font-oswald text-2xl font-bold uppercase mb-6">Cuéntanos un poco más</h1>
-
-    <form class="flex flex-col gap-4" (ngSubmit)="submitRegistration()">
-      @if (selectedProfile() === 'PROFESIONAL') {
-        <div>
-          <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Profesión</label>
-          <input name="profession" [(ngModel)]="profession" required
-                 class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
-        </div>
-        <div>
-          <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Años de experiencia</label>
-          <input type="number" name="yearsExperience" [(ngModel)]="yearsExperience"
-                 class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
-        </div>
-        <div>
-          <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Empresa actual</label>
-          <input name="currentCompany" [(ngModel)]="currentCompany" [disabled]="searchingJob()"
-                 class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none disabled:opacity-50" />
-        </div>
-        <label class="flex items-center gap-2 text-sm text-muted-1">
-          <input type="checkbox" name="searchingJob" [ngModel]="searchingJob()" (ngModelChange)="setSearchingJob($event)" />
-          Actualmente en búsqueda de empleo
-        </label>
-      }
-
-      @if (selectedProfile() === 'EMPRENDEDOR') {
-        <div>
-          <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Producto o negocio</label>
-          <input name="businessProduct" [(ngModel)]="businessProduct" required
-                 class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
-        </div>
-        <div>
-          <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Tiempo operando</label>
-          <input name="operatingTime" [(ngModel)]="operatingTime"
-                 class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
-        </div>
-      }
-
-      @if (selectedProfile() === 'EMPRESARIO') {
-        <div>
-          <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Empresa</label>
-          <input name="companyName" [(ngModel)]="companyName" required
-                 class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
-        </div>
-        <div>
-          <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Número de empleados</label>
-          <input type="number" name="employeeCount" [(ngModel)]="employeeCount"
-                 class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
-        </div>
-        <div>
-          <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Años con la empresa</label>
-          <input type="number" name="yearsWithCompany" [(ngModel)]="yearsWithCompany"
-                 class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
-        </div>
-      }
-
-      @if (error()) {
-        <p class="text-danger text-sm">{{ error() }}</p>
-      }
-
-      <button type="submit" [disabled]="loading()"
-              class="bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg mt-2 disabled:opacity-50">
-        Crear mi cuenta
-      </button>
-    </form>
-  }
-
-  @if (step() === 4) {
-    <div class="flex flex-col items-center text-center mt-12">
-      <img src="logo-mi-crop.png" alt="Mi Casa Church" class="h-16 w-auto mb-4" />
-      <p class="font-oswald text-xs tracking-[.1em] uppercase text-muted-1">Mi Casa Church</p>
-      <p class="font-script text-4xl mt-6">Bienvenido</p>
-      <h1 class="font-oswald text-3xl font-bold uppercase">A LA RED</h1>
-      <p class="text-muted-2 text-sm mt-6 max-w-sm">
-        Tu cuenta quedó creada como <strong>{{ profileLabel() }}</strong>. Ya puedes descargar el material de tu
-        perfil y confirmar tu asistencia a los próximos entrenamientos.
-      </p>
-      <button type="button" (click)="enterNetwork()"
-              class="w-full bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg mt-10">
-        Entrar a la red
-      </button>
-    </div>
-  }
+  </div>
 </div>

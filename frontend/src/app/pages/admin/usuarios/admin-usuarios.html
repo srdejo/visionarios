@@ -1,38 +1,260 @@
-<div class="min-h-screen bg-white px-6 py-8 pb-24">
-  <p class="font-oswald text-xs uppercase tracking-[.1em] text-orange">Administrador</p>
-  <h1 class="font-oswald text-2xl font-bold uppercase mt-1 mb-6">Usuarios</h1>
+<div class="min-h-screen bg-white px-6 py-8 pb-24 lg:pb-14 lg:bg-[#F4F2EF] lg:px-10">
+  <div class="lg:max-w-[1180px] lg:mx-auto">
+    <p class="font-oswald text-xs uppercase tracking-[.1em] text-orange-hover lg:text-[11px] lg:tracking-[.2em]">Administrador</p>
+    <h1 class="font-oswald text-2xl font-bold uppercase mt-1 mb-6 lg:text-4xl">Usuarios</h1>
 
-  @if (result(); as r) {
-    <div class="grid grid-cols-3 gap-3 mb-6">
-      <div class="border border-line-2 rounded-xl p-3 text-center">
-        <p class="font-oswald text-2xl font-bold">{{ r.total }}</p>
-        <p class="text-muted-3 text-xs uppercase tracking-wide">Total</p>
+    @if (result(); as r) {
+      <div class="grid grid-cols-2 gap-3 mb-6 lg:grid-cols-4 lg:gap-3.5">
+        <div class="border border-line-2 rounded-xl p-3 text-center lg:bg-white lg:border-0 lg:rounded-2xl lg:p-5 lg:text-left">
+          <p class="font-oswald text-2xl font-bold lg:text-[30px]">{{ r.total }}</p>
+          <p class="text-muted-3 text-xs uppercase tracking-wide">Total</p>
+        </div>
+        <div class="border border-line-2 rounded-xl p-3 text-center lg:bg-white lg:border-0 lg:rounded-2xl lg:p-5 lg:text-left">
+          <p class="font-oswald text-2xl font-bold lg:text-[30px]">{{ r.countByProfile.PROFESIONAL }}</p>
+          <p class="text-muted-3 text-xs uppercase tracking-wide">Profesionales</p>
+        </div>
+        <div class="border border-line-2 rounded-xl p-3 text-center lg:bg-white lg:border-0 lg:rounded-2xl lg:p-5 lg:text-left">
+          <p class="font-oswald text-2xl font-bold lg:text-[30px]">{{ r.countByProfile.EMPRENDEDOR }}</p>
+          <p class="text-muted-3 text-xs uppercase tracking-wide">Emprend.</p>
+        </div>
+        <div class="border border-line-2 rounded-xl p-3 text-center lg:bg-white lg:border-0 lg:rounded-2xl lg:p-5 lg:text-left">
+          <p class="font-oswald text-2xl font-bold lg:text-[30px]">{{ r.countByProfile.EMPRESARIO }}</p>
+          <p class="text-muted-3 text-xs uppercase tracking-wide">Empresarios</p>
+        </div>
       </div>
-      <div class="border border-line-2 rounded-xl p-3 text-center">
-        <p class="font-oswald text-2xl font-bold">{{ r.countByProfile.EMPRENDEDOR }}</p>
-        <p class="text-muted-3 text-xs uppercase tracking-wide">Emprend.</p>
-      </div>
-      <div class="border border-line-2 rounded-xl p-3 text-center">
-        <p class="font-oswald text-2xl font-bold">{{ r.countByProfile.EMPRESARIO }}</p>
-        <p class="text-muted-3 text-xs uppercase tracking-wide">Empresarios</p>
-      </div>
-    </div>
 
-    <div class="flex flex-col gap-3">
-      @for (u of r.users; track u.id) {
-        <div class="flex items-center gap-3 border border-line-2 rounded-xl p-3">
-          <div class="w-10 h-10 rounded-full bg-dark text-white flex items-center justify-center font-oswald text-sm">
-            {{ initials(u) }}
-          </div>
-          <div class="flex-1">
-            <p class="font-oswald font-medium">{{ u.fullName }}</p>
-            <p class="text-muted-3 text-xs">{{ u.email }}</p>
-          </div>
-          <span class="font-oswald text-xs uppercase px-2 py-1 rounded-full bg-line-4 text-muted-1">
-            {{ profileLabel(u) }}
-          </span>
+      <form class="flex gap-2 mb-3" (ngSubmit)="applySearch()">
+        <input name="search" [(ngModel)]="search" placeholder="Buscar por nombre o correo…"
+               class="flex-1 bg-input border border-line-1 rounded-lg px-3 py-2 text-sm outline-none focus:bg-white focus:border-dark" />
+        <button type="button" (click)="toggleFiltros()"
+                class="relative flex items-center gap-2 font-oswald text-xs uppercase px-4 rounded-lg border border-line-1 text-muted-1 whitespace-nowrap">
+          <i class="fa-solid fa-sliders"></i>
+          Filtros
+          @if (activeCount() > 0) {
+            <span class="flex items-center justify-center min-w-5 h-5 px-1 rounded-full bg-orange text-dark text-[11px] font-bold">{{ activeCount() }}</span>
+          }
+        </button>
+      </form>
+
+      @if (activeCount() > 0) {
+        <div class="flex items-center gap-2 flex-wrap mb-6">
+          @for (chip of activeChips(); track chip.label) {
+            <button type="button" (click)="chip.onRemove()"
+                    class="inline-flex items-center gap-2 h-7 px-3 rounded-lg bg-line-4 text-muted-2 font-oswald text-[11px] uppercase tracking-wide">
+              {{ chip.label }}
+              <span class="text-muted-4">✕</span>
+            </button>
+          }
+          <button type="button" (click)="clearAll()" class="text-xs text-muted-1 underline underline-offset-2">Limpiar</button>
+        </div>
+      } @else {
+        <div class="mb-6"></div>
+      }
+
+      <div class="flex flex-col gap-3 lg:bg-white lg:rounded-[18px] lg:gap-0 lg:overflow-hidden">
+        <div class="hidden lg:grid lg:grid-cols-[1.6fr_1.6fr_150px] lg:gap-4 lg:px-6 lg:py-4 lg:bg-[#FAF8F6] lg:border-b lg:border-line-2">
+          <span class="font-oswald text-[11px] tracking-[.14em] uppercase text-muted-1">Nombre</span>
+          <span class="font-oswald text-[11px] tracking-[.14em] uppercase text-muted-1">Correo</span>
+          <span class="font-oswald text-[11px] tracking-[.14em] uppercase text-muted-1">Perfil</span>
+        </div>
+        @for (u of users(); track u.id) {
+          <button type="button" (click)="openDetail(u)"
+                  class="text-left flex items-center gap-3 border border-line-2 rounded-xl p-3 lg:border-0 lg:border-b lg:border-line-3 lg:rounded-none lg:grid lg:grid-cols-[1.6fr_1.6fr_150px] lg:gap-4 lg:px-6 lg:py-3.5 hover:bg-line-4/40">
+            <div class="flex items-center gap-3 lg:min-w-0">
+              <div class="w-10 h-10 rounded-full bg-dark text-white flex items-center justify-center font-oswald text-sm lg:w-9 lg:h-9 lg:flex-none">
+                {{ initials(u) }}
+              </div>
+              <div class="min-w-0">
+                <p class="font-oswald font-medium lg:truncate">{{ u.fullName }}</p>
+                <p class="text-muted-3 text-xs lg:hidden">{{ u.email }}</p>
+              </div>
+            </div>
+            <p class="hidden lg:block lg:text-sm lg:text-muted-2 lg:truncate">{{ u.email }}</p>
+            <span class="font-oswald text-xs uppercase px-2 py-1 rounded-full bg-line-4 text-muted-1 justify-self-start">
+              {{ profileLabel(u) }}
+            </span>
+          </button>
+        } @empty {
+          <p class="text-muted-2 text-sm p-4">No hay usuarios para los filtros seleccionados.</p>
+        }
+      </div>
+
+      @if (totalPages() > 1) {
+        <div class="flex items-center justify-between gap-3 mt-4">
+          <button type="button" (click)="prevPage()" [disabled]="currentPage() === 0"
+                  class="font-oswald text-xs uppercase px-4 py-2 rounded-lg border border-line-1 text-muted-1 disabled:opacity-40">
+            Anterior
+          </button>
+          <span class="text-xs text-muted-3 uppercase font-oswald tracking-wide">Página {{ currentPage() + 1 }} de {{ totalPages() }}</span>
+          <button type="button" (click)="nextPage()" [disabled]="currentPage() + 1 === totalPages()"
+                  class="font-oswald text-xs uppercase px-4 py-2 rounded-lg border border-line-1 text-muted-1 disabled:opacity-40">
+            Siguiente
+          </button>
         </div>
       }
-    </div>
-  }
+    }
+  </div>
 </div>
+
+@if (selectedUser(); as u) {
+  <app-bottom-sheet [title]="u.fullName" (close)="selectedUser.set(null)">
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-dark text-white flex items-center justify-center font-oswald text-base">
+          {{ initials(u) }}
+        </div>
+        <div class="min-w-0">
+          <p class="font-oswald font-semibold truncate">{{ u.fullName }}</p>
+          <p class="text-muted-3 text-xs truncate">{{ u.email }}</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="p-3 border border-line-2 rounded-xl">
+          <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Perfil</p>
+          <p class="text-sm font-medium mt-1">{{ profileLabel(u) }}</p>
+        </div>
+        <div class="p-3 border border-line-2 rounded-xl">
+          <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Celular</p>
+          <p class="text-sm font-medium mt-1">{{ u.phone }}</p>
+        </div>
+        <div class="p-3 border border-line-2 rounded-xl">
+          <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Edad</p>
+          <p class="text-sm font-medium mt-1">{{ age(u) !== null ? age(u) + ' años' : 'No indicado' }}</p>
+        </div>
+        <div class="p-3 border border-line-2 rounded-xl">
+          <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Miembro desde</p>
+          <p class="text-sm font-medium mt-1">{{ memberSince(u) }}</p>
+        </div>
+
+        @if (u.profile === 'PROFESIONAL') {
+          <div class="p-3 border border-line-2 rounded-xl">
+            <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Profesión</p>
+            <p class="text-sm font-medium mt-1">{{ u.profession || 'No indicado' }}</p>
+          </div>
+          <div class="p-3 border border-line-2 rounded-xl">
+            <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Años de experiencia</p>
+            <p class="text-sm font-medium mt-1">{{ u.yearsExperience ?? 'No indicado' }}</p>
+          </div>
+          <div class="p-3 border border-line-2 rounded-xl col-span-2">
+            <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Empresa actual</p>
+            <p class="text-sm font-medium mt-1">{{ u.currentCompany || 'No indicado (en búsqueda de empleo)' }}</p>
+          </div>
+        }
+
+        @if (u.profile === 'EMPRENDEDOR') {
+          <div class="p-3 border border-line-2 rounded-xl col-span-2">
+            <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Producto o negocio</p>
+            <p class="text-sm font-medium mt-1">{{ u.businessProduct || 'No indicado' }}</p>
+          </div>
+          <div class="p-3 border border-line-2 rounded-xl">
+            <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Tiempo operando</p>
+            <p class="text-sm font-medium mt-1">{{ u.operatingTime || 'No indicado' }}</p>
+          </div>
+          <div class="p-3 border border-line-2 rounded-xl">
+            <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Categoría</p>
+            <p class="text-sm font-medium mt-1">{{ businessCategoryLabel(u) || 'No indicado' }}</p>
+          </div>
+        }
+
+        @if (u.profile === 'EMPRESARIO') {
+          <div class="p-3 border border-line-2 rounded-xl col-span-2">
+            <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Empresa</p>
+            <p class="text-sm font-medium mt-1">{{ u.companyName || 'No indicado' }}</p>
+          </div>
+          <div class="p-3 border border-line-2 rounded-xl">
+            <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Número de empleados</p>
+            <p class="text-sm font-medium mt-1">{{ u.employeeCount ?? 'No indicado' }}</p>
+          </div>
+          <div class="p-3 border border-line-2 rounded-xl">
+            <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Años con la empresa</p>
+            <p class="text-sm font-medium mt-1">{{ u.yearsWithCompany ?? 'No indicado' }}</p>
+          </div>
+          <div class="p-3 border border-line-2 rounded-xl col-span-2">
+            <p class="font-oswald text-[11px] uppercase tracking-wide text-muted-1">Categoría</p>
+            <p class="text-sm font-medium mt-1">{{ businessCategoryLabel(u) || 'No indicado' }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </app-bottom-sheet>
+}
+
+@if (filtrosOpen()) {
+  <div class="fixed inset-0 z-50 flex justify-end" (click)="toggleFiltros()">
+    <div class="absolute inset-0 bg-black/45"></div>
+    <div class="relative w-full max-w-[400px] h-full bg-white flex flex-col shadow-2xl" (click)="$event.stopPropagation()">
+      <div class="flex items-start justify-between gap-4 px-6 pt-7 pb-5">
+        <div>
+          <p class="font-oswald text-[11px] uppercase tracking-[.2em] text-orange-hover">Usuarios</p>
+          <h2 class="font-oswald text-2xl font-bold uppercase mt-1">Filtros</h2>
+          <div class="w-11 h-1.5 bg-orange mt-2"></div>
+        </div>
+        <button type="button" (click)="toggleFiltros()"
+                class="flex-none w-9 h-9 rounded-lg bg-line-4 text-muted-2 flex items-center justify-center">
+          ✕
+        </button>
+      </div>
+      <div class="flex-1 min-h-0 overflow-y-auto px-6 pb-6 flex flex-col gap-6">
+        <div>
+          <p class="font-oswald text-[10px] font-semibold uppercase tracking-[.18em] text-muted-4 pb-2 border-b border-line-3">Perfil</p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            @for (opt of profileOptions; track opt.value) {
+              <button type="button" (click)="setProfileFilter(opt.value)"
+                      class="font-oswald text-xs uppercase px-3 py-1.5 rounded-full border"
+                      [class]="profileFilter() === opt.value ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+                {{ opt.label }}
+              </button>
+            }
+          </div>
+        </div>
+        <div>
+          <p class="font-oswald text-[10px] font-semibold uppercase tracking-[.18em] text-muted-4 pb-2 border-b border-line-3">Categoría</p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            @for (opt of businessCategoryOptions; track opt.value) {
+              <button type="button" (click)="setCategoryFilter(opt.value)"
+                      class="font-oswald text-xs uppercase px-3 py-1.5 rounded-full border"
+                      [class]="categoryFilter() === opt.value ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+                {{ opt.label }}
+              </button>
+            }
+          </div>
+        </div>
+        <div>
+          <p class="font-oswald text-[10px] font-semibold uppercase tracking-[.18em] text-muted-4 pb-2 border-b border-line-3">Edad</p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            @for (b of ageBuckets; track b.value) {
+              <button type="button" (click)="setAgeBucketFilter(b.value)"
+                      class="font-oswald text-xs uppercase px-3 py-1.5 rounded-full border"
+                      [class]="ageBucketFilter() === b.value ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+                {{ b.label }}
+              </button>
+            }
+          </div>
+        </div>
+        <div>
+          <p class="font-oswald text-[10px] font-semibold uppercase tracking-[.18em] text-muted-4 pb-2 border-b border-line-3">Empleados</p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            @for (b of employeeBuckets; track b.value) {
+              <button type="button" (click)="setEmployeeBucketFilter(b.value)"
+                      class="font-oswald text-xs uppercase px-3 py-1.5 rounded-full border"
+                      [class]="employeeBucketFilter() === b.value ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+                {{ b.label }}
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 px-6 py-5 border-t border-line-3">
+        <button type="button" (click)="clearAll()"
+                class="flex-1 h-[50px] border border-line-1 rounded-xl font-oswald text-xs uppercase">
+          Limpiar
+        </button>
+        <button type="button" (click)="toggleFiltros()"
+                class="flex-[1.4] h-[50px] bg-dark text-white rounded-xl font-oswald text-xs uppercase">
+          Ver {{ totalFiltered() }} resultados
+        </button>
+      </div>
+    </div>
+  </div>
+}

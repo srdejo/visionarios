@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiResponse, EventRequest, EventResponse } from './models';
+import { ApiResponse, EventRequest, EventResponse, PagedResponse, UserResponse } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class EventsService {
@@ -29,5 +29,11 @@ export class EventsService {
 
   notify(id: string): Observable<ApiResponse<number>> {
     return this.http.post<ApiResponse<number>>(`/api/admin/events/${id}/notify`, {});
+  }
+
+  attendees(id: string, page: number, size: number): Observable<ApiResponse<PagedResponse<UserResponse>>> {
+    return this.http.get<ApiResponse<PagedResponse<UserResponse>>>(`/api/admin/events/${id}/attendees`, {
+      params: { page, size },
+    });
   }
 }

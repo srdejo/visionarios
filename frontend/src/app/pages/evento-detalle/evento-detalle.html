@@ -1,42 +1,71 @@
 @if (event(); as ev) {
-  <div class="min-h-screen bg-white pb-24">
-    <div class="bg-dark text-white px-6 pt-10 pb-8">
-      <button type="button" (click)="back()" class="text-white/70 text-sm">← Agenda</button>
-      <span class="inline-block mt-4 bg-orange text-dark font-oswald text-xs uppercase tracking-wide px-3 py-1 rounded-full">
-        {{ dateLabel(ev.startsAt) }} · {{ timeLabel(ev.startsAt) }}
-      </span>
-      <h1 class="font-oswald text-2xl font-bold uppercase mt-4">{{ ev.title }}</h1>
-      <p class="text-white/70 text-sm mt-1">{{ ev.place }}</p>
-    </div>
+  <div class="min-h-screen bg-white pb-24 lg:pb-14 lg:bg-[#F4F2EF]">
+    <div class="lg:max-w-[1180px] lg:mx-auto lg:px-10 lg:py-9">
+      <button type="button" (click)="back()" class="hidden lg:block text-muted-1 text-sm mb-4">← Agenda</button>
 
-    <div class="px-6 mt-6">
-      <p class="text-muted-2 text-sm leading-relaxed">{{ ev.description }}</p>
+      <div class="lg:grid lg:grid-cols-[1.4fr_1fr] lg:gap-[22px] lg:items-start">
+        <div class="lg:bg-white lg:rounded-[20px] lg:overflow-hidden">
+          <div class="bg-dark text-white px-6 pt-10 pb-8 lg:px-8 lg:pt-8 lg:pb-8">
+            <button type="button" (click)="back()" class="text-white/70 text-sm lg:hidden">← Agenda</button>
+            <span class="inline-block mt-4 bg-orange text-dark font-oswald text-xs uppercase tracking-wide px-3 py-1 rounded-full lg:mt-0">
+              {{ dateLabel(ev.startsAt) }} · {{ timeLabel(ev.startsAt) }}
+            </span>
+            <h1 class="font-oswald text-2xl font-bold uppercase mt-4 lg:text-[38px] lg:leading-[1.05]">{{ ev.title }}</h1>
+            <p class="text-white/70 text-sm mt-1 lg:mt-3 lg:text-[15px]">{{ ev.place }}</p>
+          </div>
 
-      <div class="grid grid-cols-2 gap-4 mt-6">
-        <div class="border border-line-2 rounded-xl p-4">
-          <p class="font-oswald text-xs uppercase tracking-wide text-muted-1">Dirigido a</p>
-          <p class="font-oswald font-medium mt-1">{{ targetLabel() }}</p>
+          <div class="px-6 mt-6 lg:mt-0 lg:px-8 lg:py-7">
+            <p class="text-muted-2 text-sm leading-relaxed">{{ ev.description }}</p>
+
+            <div class="grid gap-4 mt-6 lg:hidden" [class]="isAdmin() ? 'grid-cols-2' : 'grid-cols-1'">
+              <div class="border border-line-2 rounded-xl p-4">
+                <p class="font-oswald text-xs uppercase tracking-wide text-muted-1">Dirigido a</p>
+                <p class="font-oswald font-medium mt-1">{{ targetLabel() }}</p>
+              </div>
+              @if (isAdmin()) {
+                <div class="border border-line-2 rounded-xl p-4">
+                  <p class="font-oswald text-xs uppercase tracking-wide text-muted-1">Confirmados</p>
+                  <p class="font-oswald font-medium mt-1">{{ ev.confirmedCount }} personas</p>
+                </div>
+              }
+            </div>
+
+            <div class="mt-8 lg:mt-6">
+              <h2 class="font-oswald uppercase text-sm tracking-wide mb-3">Material del evento</h2>
+              <p class="text-muted-3 text-xs">El material relacionado a este entrenamiento estará disponible en la Biblioteca.</p>
+            </div>
+          </div>
         </div>
-        <div class="border border-line-2 rounded-xl p-4">
-          <p class="font-oswald text-xs uppercase tracking-wide text-muted-1">Confirmados</p>
-          <p class="font-oswald font-medium mt-1">{{ ev.confirmedCount }} personas</p>
+
+        <div class="px-6 mt-6 lg:mt-0 lg:bg-white lg:rounded-[20px] lg:p-7 lg:max-w-[400px] lg:flex lg:flex-col lg:gap-3.5">
+          <div class="hidden lg:flex lg:gap-6">
+            <div>
+              <p class="font-oswald text-xs uppercase tracking-wide text-muted-1">Dirigido a</p>
+              <p class="font-semibold mt-1">{{ targetLabel() }}</p>
+            </div>
+            @if (isAdmin()) {
+              <div>
+                <p class="font-oswald text-xs uppercase tracking-wide text-muted-1">Confirmados</p>
+                <p class="font-semibold mt-1">{{ ev.confirmedCount }} personas</p>
+              </div>
+            }
+          </div>
+
+          <button type="button" (click)="toggleRsvp()" [disabled]="rsvpLoading()"
+                  class="w-full font-oswald uppercase tracking-wide py-3 rounded-lg mt-6 lg:mt-0 lg:h-[54px] disabled:opacity-50"
+                  [class]="ev.confirmedByMe ? 'bg-orange text-dark' : 'bg-dark text-white'">
+            {{ rsvpLoading() ? 'Confirmando…' : (ev.confirmedByMe ? 'Asistencia confirmada ✓' : 'Confirmar asistencia') }}
+          </button>
+
+          <button type="button" (click)="addToCalendar()"
+                  class="w-full border border-line-1 text-dark font-oswald uppercase tracking-wide py-3 rounded-lg mt-3 lg:mt-0 lg:h-[54px]">
+            Agregar al calendario
+          </button>
+
+          <p class="hidden lg:block text-sm leading-relaxed text-muted-3">
+            Si no puedes asistir, cambia tu respuesta desde aquí para liberar tu lugar.
+          </p>
         </div>
-      </div>
-
-      <button type="button" (click)="toggleRsvp()"
-              class="w-full font-oswald uppercase tracking-wide py-3 rounded-lg mt-6"
-              [class]="ev.confirmedByMe ? 'bg-orange text-dark' : 'bg-dark text-white'">
-        {{ ev.confirmedByMe ? 'Asistencia confirmada ✓' : 'Confirmar asistencia' }}
-      </button>
-
-      <button type="button" (click)="addToCalendar()"
-              class="w-full border border-line-1 text-dark font-oswald uppercase tracking-wide py-3 rounded-lg mt-3">
-        Agregar al calendario
-      </button>
-
-      <div class="mt-8">
-        <h2 class="font-oswald uppercase text-sm tracking-wide mb-3">Material del evento</h2>
-        <p class="text-muted-3 text-xs">El material relacionado a este entrenamiento estará disponible en la Biblioteca.</p>
       </div>
     </div>
   </div>

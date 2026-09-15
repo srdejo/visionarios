@@ -15,6 +15,8 @@ export class AdminMaterial {
   readonly materials = signal<MaterialResponse[]>([]);
   readonly showModal = signal(false);
   readonly editingId = signal<string | null>(null);
+  readonly saving = signal(false);
+  readonly saveError = signal<string | null>(null);
 
   readonly typeOptions: MaterialType[] = ['PDF', 'DOC', 'XLS', 'MP3'];
   readonly profileOptions: { value: Profile; label: string }[] = [
@@ -41,6 +43,7 @@ export class AdminMaterial {
 
   openCreate(): void {
     this.editingId.set(null);
+    this.saveError.set(null);
     this.title = '';
     this.type = 'PDF';
     this.meta = '';
@@ -51,6 +54,7 @@ export class AdminMaterial {
 
   openEdit(m: MaterialResponse): void {
     this.editingId.set(m.id);
+    this.saveError.set(null);
     this.title = m.title;
     this.type = m.type;
     this.meta = m.meta;
@@ -73,11 +77,22 @@ export class AdminMaterial {
     };
     const id = this.editingId();
     const request = id ? this.materialsService.update(id, payload) : this.materialsService.create(payload);
-    request.subscribe((res) => {
-      if (res.success) {
-        this.showModal.set(false);
-        this.load();
-      }
+    this.saveError.set(null);
+    this.saving.set(true);
+    request.subscribe({
+      next: (res) => {
+        this.saving.set(false);
+        if (res.success) {
+          this.showModal.set(false);
+          this.load();
+        } else {
+          this.saveError.set(res.error ?? 'No pudimos guardar el material.');
+        }
+      },
+      error: () => {
+        this.saving.set(false);
+        this.saveError.set('No pudimos guardar el material.');
+      },
     });
   }
 

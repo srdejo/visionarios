@@ -1,0 +1,28 @@
+<div class="min-h-screen bg-white px-6 py-8 pb-24 lg:pb-14 lg:bg-[#F4F2EF] lg:px-10">
+  <div class="lg:max-w-[1180px] lg:mx-auto">
+    <h1 class="font-oswald text-2xl font-bold uppercase mb-4 lg:text-4xl lg:mb-1">Agenda</h1>
+    <div class="hidden lg:block w-[60px] h-1.5 bg-orange my-3.5"></div>
+
+    <div class="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-[18px] lg:mt-2">
+      @for (ev of sortedEvents(); track ev.id) {
+        <a [routerLink]="['/eventos', ev.id]"
+           class="border border-line-2 rounded-xl p-4 flex items-center gap-4 lg:bg-white lg:border-0 lg:rounded-[18px] lg:p-5">
+          <div class="text-center leading-none">
+            <p class="font-oswald text-xl font-bold">{{ day(ev.startsAt) }}</p>
+            <p class="font-oswald text-xs uppercase text-muted-1">{{ month(ev.startsAt) }}</p>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-oswald font-medium truncate">{{ ev.title }}</p>
+            <p class="text-muted-3 text-xs">{{ time(ev.startsAt) }} · {{ ev.place }}</p>
+          </div>
+          <span class="font-oswald text-xs uppercase px-2 py-1 rounded-full whitespace-nowrap"
+                [class]="isThisWeek(ev.startsAt) ? 'bg-orange text-dark' : 'bg-line-4 text-muted-1'">
+            {{ isThisWeek(ev.startsAt) ? 'Esta semana' : 'Abierto' }}
+          </span>
+        </a>
+      } @empty {
+        <p class="text-muted-2 text-sm">No hay eventos programados.</p>
+      }
+    </div>
+  </div>
+</div>

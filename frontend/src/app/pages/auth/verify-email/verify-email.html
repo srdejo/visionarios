@@ -1,0 +1,19 @@
+<div class="min-h-screen bg-white px-6 py-8 flex flex-col items-center text-center justify-center">
+  @if (loading()) {
+    <h1 class="font-oswald text-2xl font-bold uppercase">Confirmando tu correo…</h1>
+    <div class="w-12 h-1 bg-orange mt-2 mb-4"></div>
+  } @else if (done()) {
+    <h1 class="font-oswald text-2xl font-bold uppercase">Correo confirmado</h1>
+    <div class="w-12 h-1 bg-orange mt-2 mb-4"></div>
+    <p class="text-muted-2 text-sm max-w-sm">Tu cuenta quedó activada. Ya puedes iniciar sesión.</p>
+    <a routerLink="/login"
+       class="bg-dark text-white font-oswald uppercase tracking-wide py-3 px-8 rounded-lg mt-6 inline-block">
+      Ir a iniciar sesión
+    </a>
+  } @else {
+    <h1 class="font-oswald text-2xl font-bold uppercase">No pudimos confirmar tu correo</h1>
+    <div class="w-12 h-1 bg-orange mt-2 mb-4"></div>
+    <p class="text-danger text-sm max-w-sm">{{ error() }}</p>
+    <a routerLink="/login" class="text-orange text-sm mt-6 hover:text-orange-hover">Volver al inicio</a>
+  }
+</div>

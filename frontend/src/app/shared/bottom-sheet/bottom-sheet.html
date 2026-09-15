@@ -1,6 +1,7 @@
-<div class="fixed inset-0 bg-black/50 z-50 flex items-end" (click)="close.emit()">
-  <div class="bg-white w-full rounded-t-2xl p-6 max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-    <div class="w-10 h-1.5 bg-line-1 rounded-full mx-auto mb-4"></div>
+<div class="fixed inset-0 bg-black/50 z-50 flex items-end lg:items-center lg:justify-center" (click)="close.emit()">
+  <div class="bg-white w-full rounded-t-2xl p-6 max-h-[90vh] overflow-y-auto lg:w-full lg:max-w-[480px] lg:rounded-2xl lg:mx-4"
+       (click)="$event.stopPropagation()">
+    <div class="w-10 h-1.5 bg-line-1 rounded-full mx-auto mb-4 lg:hidden"></div>
     <h2 class="font-oswald text-lg font-bold uppercase mb-4">{{ title }}</h2>
     <ng-content></ng-content>
   </div>

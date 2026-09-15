@@ -1,30 +1,42 @@
 @if (visible()) {
-  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-line-1 flex justify-around items-center h-16 z-40">
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-line-1 flex justify-around items-center h-16 z-40">
     @if (!isAdmin()) {
-      <a routerLink="/home" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
-        <span class="text-lg">⌂</span>Inicio
+      <a routerLink="/home" class="flex flex-col items-center text-xs font-oswald tracking-wide gap-1"
+         [class]="isActive('/home') ? 'text-orange' : 'text-muted-1'">
+        <i class="fa-solid fa-house text-base"></i>Inicio
       </a>
-      <a routerLink="/biblioteca" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
-        <span class="text-lg">▤</span>Material
+      <a routerLink="/biblioteca" class="flex flex-col items-center text-xs font-oswald tracking-wide gap-1"
+         [class]="isActive('/biblioteca') ? 'text-orange' : 'text-muted-1'">
+        <i class="fa-solid fa-book text-base"></i>Material
       </a>
-      <a routerLink="/home" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
-        <span class="text-lg">◈</span>Agenda
+      <a routerLink="/agenda" class="flex flex-col items-center text-xs font-oswald tracking-wide gap-1"
+         [class]="isActive('/agenda', '/eventos') ? 'text-orange' : 'text-muted-1'">
+        <i class="fa-solid fa-calendar-days text-base"></i>Agenda
       </a>
-      <a routerLink="/perfil" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
-        <span class="text-lg">◉</span>Perfil
+      <a routerLink="/perfil" class="flex flex-col items-center text-xs font-oswald tracking-wide gap-1"
+         [class]="isActive('/perfil') ? 'text-orange' : 'text-muted-1'">
+        <i class="fa-solid fa-user text-base"></i>Perfil
       </a>
     } @else {
-      <a routerLink="/admin/eventos" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
-        <span class="text-lg">◈</span>Eventos
+      <a routerLink="/admin/eventos" class="flex flex-col items-center text-xs font-oswald tracking-wide gap-1"
+         [class]="isActive('/admin/eventos') ? 'text-orange' : 'text-muted-1'">
+        <i class="fa-solid fa-calendar-days text-base"></i>Eventos
       </a>
-      <a routerLink="/admin/material" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
-        <span class="text-lg">▤</span>Material
+      <a routerLink="/admin/material" class="flex flex-col items-center text-xs font-oswald tracking-wide gap-1"
+         [class]="isActive('/admin/material') ? 'text-orange' : 'text-muted-1'">
+        <i class="fa-solid fa-book text-base"></i>Material
       </a>
-      <a routerLink="/admin/usuarios" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
-        <span class="text-lg">◉</span>Usuarios
+      <a routerLink="/admin/usuarios" class="flex flex-col items-center text-xs font-oswald tracking-wide gap-1"
+         [class]="isActive('/admin/usuarios') ? 'text-orange' : 'text-muted-1'">
+        <i class="fa-solid fa-users text-base"></i>Usuarios
       </a>
-      <a routerLink="/admin/equipo" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
-        <span class="text-lg">✦</span>Equipo
+      <a routerLink="/admin/equipo" class="flex flex-col items-center text-xs font-oswald tracking-wide gap-1"
+         [class]="isActive('/admin/equipo') ? 'text-orange' : 'text-muted-1'">
+        <i class="fa-solid fa-user-shield text-base"></i>Equipo
+      </a>
+      <a routerLink="/perfil" class="flex flex-col items-center text-xs font-oswald tracking-wide gap-1"
+         [class]="isActive('/perfil') ? 'text-orange' : 'text-muted-1'">
+        <i class="fa-solid fa-user text-base"></i>Perfil
       </a>
     }
   </nav>
