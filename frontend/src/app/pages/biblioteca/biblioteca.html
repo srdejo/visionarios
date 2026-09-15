@@ -1,0 +1,41 @@
+<div class="min-h-screen bg-white px-6 py-8 pb-24">
+  <h1 class="font-oswald text-2xl font-bold uppercase mb-4">Material</h1>
+
+  <div class="flex gap-2 mb-6 flex-wrap">
+    <button type="button" (click)="setFilter('ALL')"
+            class="font-oswald text-xs uppercase tracking-wide px-3 py-1.5 rounded-full border"
+            [class]="filter() === 'ALL' ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+      Todo
+    </button>
+    <button type="button" (click)="setFilter('NETWORK')"
+            class="font-oswald text-xs uppercase tracking-wide px-3 py-1.5 rounded-full border"
+            [class]="filter() === 'NETWORK' ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+      Toda la red
+    </button>
+    @if (userProfile()) {
+      <button type="button" (click)="setFilter(userProfile()!)"
+              class="font-oswald text-xs uppercase tracking-wide px-3 py-1.5 rounded-full border"
+              [class]="filter() === userProfile() ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+        {{ userProfileLabel() }}
+      </button>
+    }
+  </div>
+
+  <div class="flex flex-col gap-3">
+    @for (m of filtered(); track m.id) {
+      <div class="border border-line-2 rounded-xl p-4">
+        <div class="flex items-center justify-between">
+          <span class="font-oswald text-xs bg-line-4 rounded px-2 py-1">{{ m.type }}</span>
+          <span class="font-oswald text-xs uppercase text-muted-3">{{ visibilityLabel(m) }}</span>
+        </div>
+        <p class="font-oswald font-medium mt-2">{{ m.title }}</p>
+        <p class="text-muted-3 text-xs">{{ m.meta }}</p>
+        <a [href]="m.driveUrl" target="_blank" class="inline-block mt-2 text-orange text-sm hover:text-orange-hover">
+          Descargar
+        </a>
+      </div>
+    } @empty {
+      <p class="text-muted-2 text-sm">No hay material disponible.</p>
+    }
+  </div>
+</div>

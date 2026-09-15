@@ -1,0 +1,28 @@
+plugins {
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
+}
+
+dependencies {
+    implementation project(':platform:web-common')
+    implementation project(':platform:security')
+    implementation project(':modules:core')
+    implementation project(':modules:identity-access')
+    implementation project(':modules:events')
+    implementation project(':modules:materials')
+    implementation project(':modules:admin')
+
+    implementation libs.spring.boot.starter.web
+    implementation libs.spring.boot.starter.data.jpa
+    implementation libs.spring.boot.starter.validation
+    implementation libs.spring.boot.starter.actuator
+    implementation libs.spring.boot.starter.security
+    implementation libs.flyway.core
+    implementation libs.flyway.postgresql
+    runtimeOnly libs.postgresql
+    testImplementation libs.spring.boot.starter.test
+}
+
+tasks.named('bootJar', org.springframework.boot.gradle.tasks.bundling.BootJar) {
+    mainClass = 'co.com.srdejo.visionarios.bootstrap.VisionariosApplication'
+}

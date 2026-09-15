@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+@config '../tailwind.config.js';
+
+html, body {
+  font-family: Barlow, sans-serif;
+  background: #ffffff;
+}
+
+.font-oswald {
+  font-family: Oswald, sans-serif;
+}

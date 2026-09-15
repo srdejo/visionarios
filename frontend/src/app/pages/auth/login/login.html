@@ -1,0 +1,47 @@
+<div class="min-h-screen flex flex-col">
+  <div class="relative bg-dark text-white px-6 pt-16 pb-20 overflow-hidden" style="clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);">
+    <div class="absolute -top-6 -right-10 w-40 h-40 bg-orange rotate-12"></div>
+    <img src="logo-mi-white.png" alt="Mi Casa Church" class="h-8 w-auto relative" />
+    <p class="font-oswald text-xs tracking-[.1em] uppercase text-white/70 relative mt-3">Mi Casa Church</p>
+    <p class="font-script text-4xl mt-6 relative">Bienvenido</p>
+    <h1 class="font-oswald text-4xl font-bold uppercase relative">
+      A <span class="text-orange">CASA</span>
+    </h1>
+    <p class="text-white/70 text-sm mt-2 relative">Red de Visionarios · Mi Casa Church</p>
+  </div>
+
+  <div class="flex-1 px-6 -mt-10 relative pb-10">
+    <form class="bg-white rounded-2xl shadow-lg p-6 flex flex-col gap-4" (ngSubmit)="submit()">
+      <div>
+        <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Correo</label>
+        <input type="email" name="email" [(ngModel)]="email" required
+               class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+      </div>
+      <div>
+        <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Contraseña</label>
+        <input type="password" name="password" [(ngModel)]="password" required
+               class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 focus:bg-white focus:border-dark outline-none" />
+      </div>
+
+      @if (error()) {
+        <p class="text-danger text-sm">{{ error() }}</p>
+      }
+
+      <button type="submit" [disabled]="loading()"
+              class="bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg disabled:opacity-50">
+        Entrar
+      </button>
+
+      <a routerLink="/olvide-password" class="text-center text-sm text-muted-1 hover:text-orange-hover">Olvidé mi contraseña</a>
+
+      <div class="flex items-center gap-3 text-muted-3 text-xs">
+        <div class="flex-1 h-px bg-line-1"></div>O<div class="flex-1 h-px bg-line-1"></div>
+      </div>
+
+      <a routerLink="/registro"
+         class="text-center border border-dark rounded-lg py-3 font-oswald uppercase tracking-wide hover:bg-orange hover:border-orange transition-colors">
+        Crear mi cuenta
+      </a>
+    </form>
+  </div>
+</div>

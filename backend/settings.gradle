@@ -1,0 +1,10 @@
+rootProject.name = 'visionarios-backend'
+
+include 'bootstrap',
+        'platform:web-common',
+        'platform:security',
+        'modules:core',
+        'modules:identity-access',
+        'modules:events',
+        'modules:materials',
+        'modules:admin'

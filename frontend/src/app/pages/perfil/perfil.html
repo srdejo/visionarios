@@ -1,0 +1,29 @@
+<div class="min-h-screen bg-white px-6 py-10 pb-24">
+  <div class="flex flex-col items-center text-center">
+    <div class="w-20 h-20 rounded-full bg-dark text-white flex items-center justify-center font-oswald text-2xl">
+      {{ initials() }}
+    </div>
+    <p class="font-oswald text-xl font-semibold mt-4 w-full truncate text-center">{{ user()?.fullName }}</p>
+    <p class="text-muted-2 text-sm">{{ user()?.email }}</p>
+  </div>
+
+  <div class="mt-8 flex flex-col divide-y divide-line-2 border-y border-line-2">
+    <div class="flex justify-between py-3">
+      <span class="font-oswald text-xs uppercase tracking-wide text-muted-1">Perfil</span>
+      <span class="text-sm">{{ profileLabel() }}</span>
+    </div>
+    <div class="flex justify-between py-3">
+      <span class="font-oswald text-xs uppercase tracking-wide text-muted-1">Celular</span>
+      <span class="text-sm">{{ user()?.phone }}</span>
+    </div>
+    <div class="flex justify-between py-3">
+      <span class="font-oswald text-xs uppercase tracking-wide text-muted-1">Miembro desde</span>
+      <span class="text-sm">{{ memberSince() }}</span>
+    </div>
+  </div>
+
+  <button type="button" (click)="logout()"
+          class="w-full mt-10 border border-line-1 text-danger font-oswald uppercase tracking-wide py-3 rounded-lg">
+    Cerrar sesión
+  </button>
+</div>

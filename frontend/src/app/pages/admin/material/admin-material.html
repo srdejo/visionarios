@@ -1,0 +1,90 @@
+<div class="min-h-screen bg-white px-6 py-8 pb-24">
+  <p class="font-oswald text-xs uppercase tracking-[.1em] text-orange">Administrador</p>
+  <div class="flex justify-between items-center mt-1 mb-2">
+    <h1 class="font-oswald text-2xl font-bold uppercase">Material</h1>
+    <button type="button" (click)="openCreate()"
+            class="w-10 h-10 rounded-full bg-dark text-white text-xl leading-none flex items-center justify-center">
+      +
+    </button>
+  </div>
+  <p class="text-muted-3 text-xs mb-6">
+    Cada documento es un enlace de Drive etiquetado por el perfil al que es visible.
+  </p>
+
+  <div class="flex flex-col gap-3">
+    @for (m of materials(); track m.id) {
+      <div class="border border-line-2 rounded-xl p-4">
+        <div class="flex justify-between items-start">
+          <p class="font-oswald font-medium">{{ m.title }}</p>
+          <span class="font-oswald text-xs uppercase px-2 py-1 rounded-full bg-line-4 text-muted-1">
+            {{ visibilityLabel(m) }}
+          </span>
+        </div>
+        <p class="text-muted-3 text-xs mt-1 truncate">{{ m.driveUrl }}</p>
+        <button type="button" (click)="openEdit(m)" class="text-orange text-sm mt-2 hover:text-orange-hover">
+          Editar
+        </button>
+      </div>
+    } @empty {
+      <p class="text-muted-2 text-sm">No hay material creado.</p>
+    }
+  </div>
+</div>
+
+@if (showModal()) {
+  <app-bottom-sheet [title]="editingId() ? 'Editar material' : 'Nuevo material'" (close)="showModal.set(false)">
+    <form class="flex flex-col gap-4" (ngSubmit)="save()">
+      <div>
+        <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Título</label>
+        <input name="title" [(ngModel)]="title" required
+               class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 outline-none" />
+      </div>
+      <div>
+        <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Tipo</label>
+        <select name="type" [(ngModel)]="type"
+                class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 outline-none">
+          @for (t of typeOptions; track t) {
+            <option [value]="t">{{ t }}</option>
+          }
+        </select>
+      </div>
+      <div>
+        <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Meta (descripción corta)</label>
+        <input name="meta" [(ngModel)]="meta"
+               class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 outline-none" />
+      </div>
+      <div>
+        <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">URL de Google Drive</label>
+        <input name="driveUrl" [(ngModel)]="driveUrl" required
+               class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 outline-none" />
+      </div>
+      <div>
+        <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Visible para</label>
+        <div class="flex gap-2 mt-2 flex-wrap">
+          @for (opt of profileOptions; track opt.value) {
+            <button type="button" (click)="toggleVisible(opt.value)"
+                    class="font-oswald text-xs uppercase px-3 py-1.5 rounded-full border"
+                    [class]="visibleProfile === opt.value ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+              {{ opt.label }}
+            </button>
+          }
+          <button type="button" (click)="visibleProfile = null"
+                  class="font-oswald text-xs uppercase px-3 py-1.5 rounded-full border"
+                  [class]="visibleProfile === null ? 'bg-orange border-orange text-dark' : 'border-line-1 text-muted-1'">
+            Toda la red
+          </button>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-4">
+        <button type="button" (click)="showModal.set(false)"
+                class="flex-1 border border-line-1 font-oswald uppercase tracking-wide py-3 rounded-lg">
+          Cancelar
+        </button>
+        <button type="submit" class="flex-1 bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </app-bottom-sheet>
+}

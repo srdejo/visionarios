@@ -1,0 +1,61 @@
+<div class="min-h-screen bg-white px-6 py-8 pb-24">
+  <p class="font-oswald text-xs uppercase tracking-[.1em] text-orange">Administrador</p>
+  <h1 class="font-oswald text-2xl font-bold uppercase mt-1 mb-6">Equipo</h1>
+
+  <div class="bg-dark text-white rounded-xl p-5 mb-8">
+    <h2 class="font-oswald uppercase tracking-wide text-sm">Invitar administrador</h2>
+    <p class="text-white/60 text-xs mt-2">
+      El enlace vence en 7 días y es de un solo uso.
+    </p>
+
+    <form class="flex gap-2 mt-4" (ngSubmit)="sendInvite()">
+      <input type="email" name="email" [(ngModel)]="email" placeholder="correo@ejemplo.com" required
+             class="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-white/40 outline-none" />
+      <button type="submit" class="bg-orange text-dark font-oswald uppercase tracking-wide px-4 rounded-lg">
+        Invitar
+      </button>
+    </form>
+
+    @if (lastInviteLink(); as link) {
+      <div class="mt-4 bg-white/10 rounded-lg p-3">
+        <p class="text-xs break-all">{{ link }}</p>
+        <button type="button" (click)="copyLink()" class="text-orange text-sm mt-2 hover:text-orange-hover">
+          {{ copied() ? 'Enlace copiado ✓' : 'Copiar enlace' }}
+        </button>
+      </div>
+    }
+  </div>
+
+  <h2 class="font-oswald uppercase tracking-wide text-sm mb-3">Administradores</h2>
+  <div class="flex flex-col gap-3">
+    @for (a of admins(); track a.id) {
+      <div class="flex items-center gap-3 border border-line-2 rounded-xl p-3">
+        <div class="w-10 h-10 rounded-full bg-dark text-white flex items-center justify-center font-oswald text-sm">
+          {{ initials(a) }}
+        </div>
+        <div class="flex-1">
+          <p class="font-oswald font-medium">{{ a.fullName }}</p>
+          <p class="text-muted-3 text-xs">{{ a.email }}</p>
+        </div>
+        <span class="font-oswald text-xs uppercase px-2 py-1 rounded-full bg-line-4 text-muted-1">
+          {{ a.id === currentUser()?.id ? 'Tú' : 'Activa' }}
+        </span>
+      </div>
+    }
+    @for (inv of invites(); track inv.id) {
+      @if (!inv.used) {
+        <div class="flex items-center gap-3 border border-line-2 rounded-xl p-3">
+          <div class="w-10 h-10 rounded-full bg-line-4 text-muted-1 flex items-center justify-center font-oswald text-sm">
+            ?
+          </div>
+          <div class="flex-1">
+            <p class="font-oswald font-medium">{{ inv.email }}</p>
+          </div>
+          <span class="font-oswald text-xs uppercase px-2 py-1 rounded-full bg-line-4 text-muted-1">
+            {{ inviteStatus(inv) }}
+          </span>
+        </div>
+      }
+    }
+  </div>
+</div>

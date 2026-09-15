@@ -1,0 +1,81 @@
+<div class="min-h-screen bg-white pb-24">
+  <div class="bg-dark text-white px-6 pt-10 pb-8">
+    <div class="flex items-center justify-between">
+      <img src="logo-mi-white.png" alt="Mi Casa Church" class="h-7 w-auto" />
+      @if (profileLabel()) {
+        <span class="bg-orange text-dark font-oswald text-xs tracking-[.1em] uppercase px-3 py-1 rounded-full">
+          {{ profileLabel() }}
+        </span>
+      }
+    </div>
+    <p class="font-script text-4xl mt-6 truncate">Hola, {{ user()?.fullName }}</p>
+    <h1 class="font-oswald text-2xl font-bold uppercase">
+      Red de <span class="text-orange">VISIONARIOS</span>
+    </h1>
+    <p class="text-white/70 text-sm mt-1">Mi Casa Church · Entrenamiento 2026</p>
+  </div>
+
+  <div class="px-6 -mt-6">
+    @if (nextEvent(); as ev) {
+      <a [routerLink]="['/eventos', ev.id]" class="block bg-white rounded-2xl shadow-lg overflow-hidden border border-line-2">
+        <div class="bg-orange px-4 py-2 flex justify-between text-xs font-oswald uppercase tracking-wide text-dark">
+          <span>Próximo evento</span>
+          <span>Faltan {{ daysUntil(ev.startsAt) }} días</span>
+        </div>
+        <div class="p-4 flex gap-4 items-center">
+          <div class="text-center leading-none">
+            <p class="font-oswald text-2xl font-bold">{{ day(ev.startsAt) }}</p>
+            <p class="font-oswald text-xs uppercase text-muted-1">{{ month(ev.startsAt) }}</p>
+          </div>
+          <div>
+            <p class="font-oswald font-semibold">{{ ev.title }}</p>
+            <p class="text-muted-2 text-sm">{{ time(ev.startsAt) }} · {{ ev.place }}</p>
+          </div>
+        </div>
+      </a>
+    }
+  </div>
+
+  <div class="px-6 mt-8">
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="font-oswald uppercase text-sm tracking-wide">Material para ti</h2>
+      <a routerLink="/biblioteca" class="text-orange text-sm hover:text-orange-hover">Ver todo</a>
+    </div>
+    <div class="flex flex-col gap-3">
+      @for (m of featuredMaterials(); track m.id) {
+        <div class="border border-line-2 rounded-xl p-4 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="font-oswald text-xs bg-line-4 rounded px-2 py-1">{{ m.type }}</span>
+            <div>
+              <p class="font-oswald font-medium">{{ m.title }}</p>
+              <p class="text-muted-3 text-xs">{{ m.meta }}</p>
+            </div>
+          </div>
+          <a [href]="m.driveUrl" target="_blank" class="text-orange text-sm hover:text-orange-hover">Abrir</a>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="px-6 mt-8">
+    <h2 class="font-oswald uppercase text-sm tracking-wide mb-3">Agenda</h2>
+    <div class="flex flex-col gap-3">
+      @for (ev of agenda(); track ev.id) {
+        <a [routerLink]="['/eventos', ev.id]" class="border border-line-2 rounded-xl p-4 flex items-center gap-4">
+          <div class="text-center leading-none">
+            <p class="font-oswald text-xl font-bold">{{ day(ev.startsAt) }}</p>
+            <p class="font-oswald text-xs uppercase text-muted-1">{{ month(ev.startsAt) }}</p>
+          </div>
+          <div class="flex-1">
+            <p class="font-oswald font-medium">{{ ev.title }}</p>
+            <p class="text-muted-3 text-xs">{{ time(ev.startsAt) }} · {{ ev.place }}</p>
+          </div>
+          <span class="font-oswald text-xs uppercase px-2 py-1 rounded-full"
+                [class]="isThisWeek(ev.startsAt) ? 'bg-orange text-dark' : 'bg-line-4 text-muted-1'">
+            {{ isThisWeek(ev.startsAt) ? 'Esta semana' : 'Abierto' }}
+          </span>
+        </a>
+      }
+    </div>
+  </div>
+</div>

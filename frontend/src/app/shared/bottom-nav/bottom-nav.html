@@ -1,0 +1,31 @@
+@if (visible()) {
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-line-1 flex justify-around items-center h-16 z-40">
+    @if (!isAdmin()) {
+      <a routerLink="/home" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
+        <span class="text-lg">⌂</span>Inicio
+      </a>
+      <a routerLink="/biblioteca" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
+        <span class="text-lg">▤</span>Material
+      </a>
+      <a routerLink="/home" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
+        <span class="text-lg">◈</span>Agenda
+      </a>
+      <a routerLink="/perfil" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
+        <span class="text-lg">◉</span>Perfil
+      </a>
+    } @else {
+      <a routerLink="/admin/eventos" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
+        <span class="text-lg">◈</span>Eventos
+      </a>
+      <a routerLink="/admin/material" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
+        <span class="text-lg">▤</span>Material
+      </a>
+      <a routerLink="/admin/usuarios" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
+        <span class="text-lg">◉</span>Usuarios
+      </a>
+      <a routerLink="/admin/equipo" routerLinkActive="text-orange" class="flex flex-col items-center text-xs font-oswald tracking-wide text-muted-1 gap-1">
+        <span class="text-lg">✦</span>Equipo
+      </a>
+    }
+  </nav>
+}

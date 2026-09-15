@@ -1,0 +1,27 @@
+package co.com.srdejo.visionarios.modules.identityaccess.dto;
+
+import co.com.srdejo.visionarios.modules.identityaccess.Profile;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+public record RegisterRequest(
+        @NotBlank String fullName,
+        @NotBlank String phone,
+        @NotBlank @Email String email,
+        @NotBlank @Size(min = 8, message = "La contraseña debe tener minimo 8 caracteres") String password,
+        @NotNull Profile profile,
+        // Profesional
+        String profession,
+        Integer yearsExperience,
+        String currentCompany,
+        // Emprendedor
+        String businessProduct,
+        String operatingTime,
+        // Empresario
+        String companyName,
+        Integer employeeCount,
+        Integer yearsWithCompany
+) {
+}

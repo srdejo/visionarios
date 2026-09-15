@@ -1,0 +1,38 @@
+<div class="min-h-screen bg-white px-6 py-8 pb-24">
+  <p class="font-oswald text-xs uppercase tracking-[.1em] text-orange">Administrador</p>
+  <h1 class="font-oswald text-2xl font-bold uppercase mt-1 mb-6">Usuarios</h1>
+
+  @if (result(); as r) {
+    <div class="grid grid-cols-3 gap-3 mb-6">
+      <div class="border border-line-2 rounded-xl p-3 text-center">
+        <p class="font-oswald text-2xl font-bold">{{ r.total }}</p>
+        <p class="text-muted-3 text-xs uppercase tracking-wide">Total</p>
+      </div>
+      <div class="border border-line-2 rounded-xl p-3 text-center">
+        <p class="font-oswald text-2xl font-bold">{{ r.countByProfile.EMPRENDEDOR }}</p>
+        <p class="text-muted-3 text-xs uppercase tracking-wide">Emprend.</p>
+      </div>
+      <div class="border border-line-2 rounded-xl p-3 text-center">
+        <p class="font-oswald text-2xl font-bold">{{ r.countByProfile.EMPRESARIO }}</p>
+        <p class="text-muted-3 text-xs uppercase tracking-wide">Empresarios</p>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-3">
+      @for (u of r.users; track u.id) {
+        <div class="flex items-center gap-3 border border-line-2 rounded-xl p-3">
+          <div class="w-10 h-10 rounded-full bg-dark text-white flex items-center justify-center font-oswald text-sm">
+            {{ initials(u) }}
+          </div>
+          <div class="flex-1">
+            <p class="font-oswald font-medium">{{ u.fullName }}</p>
+            <p class="text-muted-3 text-xs">{{ u.email }}</p>
+          </div>
+          <span class="font-oswald text-xs uppercase px-2 py-1 rounded-full bg-line-4 text-muted-1">
+            {{ profileLabel(u) }}
+          </span>
+        </div>
+      }
+    </div>
+  }
+</div>

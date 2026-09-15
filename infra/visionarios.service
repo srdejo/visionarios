@@ -1,0 +1,15 @@
+[Unit]
+Description=Visionarios Backend
+After=network.target postgresql.service
+
+[Service]
+User=srdejo
+WorkingDirectory=/home/srdejo/apps/visionarios
+EnvironmentFile=/home/srdejo/apps/visionarios/.env
+ExecStart=/usr/bin/java -jar /home/srdejo/apps/visionarios/app.jar --spring.profiles.active=prod --server.port=8089
+SuccessExitStatus=143
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

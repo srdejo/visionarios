@@ -1,0 +1,39 @@
+<div class="min-h-screen bg-white px-6 py-8">
+  <h1 class="font-oswald text-2xl font-bold uppercase mb-6">Aceptar invitación</h1>
+
+  <form class="flex flex-col gap-4" (ngSubmit)="submit()">
+    <div>
+      <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Nombre completo</label>
+      <input name="fullName" [(ngModel)]="fullName" required
+             class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 outline-none" />
+    </div>
+    <div>
+      <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Celular</label>
+      <input name="phone" [(ngModel)]="phone" required
+             class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 outline-none" />
+    </div>
+    <div>
+      <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Contraseña</label>
+      <input type="password" name="password" [(ngModel)]="password" required minlength="8"
+             class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 outline-none" />
+    </div>
+    <div>
+      <label class="font-oswald text-xs tracking-[.14em] uppercase text-muted-1">Perfil</label>
+      <select name="profile" [(ngModel)]="profile"
+              class="mt-1 w-full bg-input border border-line-1 rounded-lg px-3 py-2 outline-none">
+        <option value="PROFESIONAL">Profesional</option>
+        <option value="EMPRENDEDOR">Emprendedor</option>
+        <option value="EMPRESARIO">Empresario</option>
+      </select>
+    </div>
+
+    @if (error()) {
+      <p class="text-danger text-sm">{{ error() }}</p>
+    }
+
+    <button type="submit" [disabled]="loading()"
+            class="bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg disabled:opacity-50">
+      Aceptar invitación
+    </button>
+  </form>
+</div>
