@@ -26,7 +26,8 @@ public record UserResponse(
         Integer employeeCount,
         Integer yearsWithCompany,
         BusinessCategory businessCategory,
-        Instant createdAt
+        Instant createdAt,
+        boolean emailVerified
 ) {
     public static UserResponse from(User user) {
         return new UserResponse(
@@ -36,6 +37,6 @@ public record UserResponse(
                 user.getBusinessProduct(), user.getOperatingTime(),
                 user.getCompanyName(), user.getEmployeeCount(), user.getYearsWithCompany(),
                 user.getBusinessCategory(),
-                user.getCreatedAt());
+                user.getCreatedAt(), user.isVerified());
     }
 }

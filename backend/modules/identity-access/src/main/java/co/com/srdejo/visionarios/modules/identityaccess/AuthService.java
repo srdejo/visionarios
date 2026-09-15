@@ -31,11 +31,13 @@ public class AuthService {
     private final TokenRevocationStore tokenRevocationStore;
     private final MailSender mailSender;
     private final String publicUrl;
+    private final boolean emailVerificationEnabled;
 
     public AuthService(UserRepository userRepository, PasswordResetTokenRepository passwordResetTokenRepository,
                         EmailVerificationTokenRepository emailVerificationTokenRepository,
                         PasswordEncoder passwordEncoder, JwtService jwtService, TokenRevocationStore tokenRevocationStore,
-                        MailSender mailSender, @Value("${app.public-url}") String publicUrl) {
+                        MailSender mailSender, @Value("${app.public-url}") String publicUrl,
+                        @Value("${app.email-verification-enabled}") boolean emailVerificationEnabled) {
         this.userRepository = userRepository;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.emailVerificationTokenRepository = emailVerificationTokenRepository;
@@ -44,6 +46,7 @@ public class AuthService {
         this.tokenRevocationStore = tokenRevocationStore;
         this.mailSender = mailSender;
         this.publicUrl = publicUrl;
+        this.emailVerificationEnabled = emailVerificationEnabled;
     }
 
     @Transactional
@@ -109,7 +112,7 @@ public class AuthService {
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
             throw new BusinessRuleException("Correo o contraseña invalidos");
         }
-        if (!user.isVerified()) {
+        if (emailVerificationEnabled && !user.isVerified()) {
             throw new BusinessRuleException("Debes verificar tu correo antes de iniciar sesión");
         }
         return new AuthResponse(issueToken(user), UserResponse.from(user));

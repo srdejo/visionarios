@@ -3,10 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth.service';
 import { AuthHero } from '../../../shared/auth-hero/auth-hero';
+import { InfoModal } from '../../../shared/info-modal/info-modal';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, RouterLink, AuthHero],
+  imports: [FormsModule, RouterLink, AuthHero, InfoModal],
   templateUrl: './login.html',
 })
 export class Login {
@@ -17,6 +18,7 @@ export class Login {
   password = '';
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly showVerifyReminder = signal(false);
 
   submit(): void {
     this.error.set(null);
@@ -25,7 +27,11 @@ export class Login {
       next: (res) => {
         this.loading.set(false);
         if (res.success) {
-          this.router.navigateByUrl('/home');
+          if (res.data && !res.data.user.emailVerified) {
+            this.showVerifyReminder.set(true);
+          } else {
+            this.router.navigateByUrl('/home');
+          }
         } else {
           this.error.set(res.error ?? 'No pudimos iniciar sesión.');
         }
@@ -35,5 +41,10 @@ export class Login {
         this.error.set('Correo o contraseña incorrectos.');
       },
     });
+  }
+
+  dismissVerifyReminder(): void {
+    this.showVerifyReminder.set(false);
+    this.router.navigateByUrl('/home');
   }
 }

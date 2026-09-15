@@ -1,0 +1,12 @@
+<div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4" (click)="close.emit()">
+  <div class="bg-white w-full max-w-[380px] rounded-2xl p-6" (click)="$event.stopPropagation()">
+    <h2 class="font-oswald text-lg font-bold uppercase">{{ title }}</h2>
+    <p class="text-muted-2 text-sm mt-2">{{ message }}</p>
+    <div class="flex gap-3 mt-6">
+      <button type="button" (click)="close.emit()"
+              class="flex-1 bg-dark text-white font-oswald uppercase tracking-wide py-3 rounded-lg cursor-pointer">
+        {{ closeLabel }}
+      </button>
+    </div>
+  </div>
+</div>

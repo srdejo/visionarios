@@ -43,6 +43,7 @@ export interface UserResponse {
   yearsWithCompany?: number | null;
   businessCategory?: BusinessCategory | null;
   createdAt: string;
+  emailVerified: boolean;
 }
 
 export interface AuthResponse {

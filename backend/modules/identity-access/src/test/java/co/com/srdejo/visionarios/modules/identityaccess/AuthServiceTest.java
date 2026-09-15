@@ -51,7 +51,7 @@ class AuthServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         authService = new AuthService(userRepository, passwordResetTokenRepository, emailVerificationTokenRepository,
-                passwordEncoder, jwtService, tokenRevocationStore, mailSender, "https://visionarios.example.com");
+                passwordEncoder, jwtService, tokenRevocationStore, mailSender, "https://visionarios.example.com", true);
     }
 
     private RegisterRequest registerRequest(String password, String confirmPassword) {
@@ -89,6 +89,42 @@ class AuthServiceTest {
 
         assertThat(response.user().email()).isEqualTo("ana@example.com");
         assertThat(response.message()).isNotBlank();
+    }
+
+    @Test
+    void register_withVerificationDisabled_stillCreatesUnverifiedUser_andSendsEmail() {
+        AuthService authServiceFlagOff = new AuthService(userRepository, passwordResetTokenRepository,
+                emailVerificationTokenRepository, passwordEncoder, jwtService, tokenRevocationStore, mailSender,
+                "https://visionarios.example.com", false);
+        RegisterRequest request = registerRequest("password123", "password123");
+        when(userRepository.existsByEmail("ana@example.com")).thenReturn(false);
+        when(passwordEncoder.encode("password123")).thenReturn("hashed");
+
+        authServiceFlagOff.register(request);
+
+        ArgumentCaptor<User> savedUser = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(savedUser.capture());
+        assertThat(savedUser.getValue().isVerified()).isFalse();
+
+        verify(emailVerificationTokenRepository).save(any(EmailVerificationToken.class));
+        verify(mailSender).sendEmailVerification(eq("ana@example.com"), eq("Ana Torres"), anyString());
+    }
+
+    @Test
+    void login_withVerificationDisabled_allowsUnverifiedAccount() {
+        AuthService authServiceFlagOff = new AuthService(userRepository, passwordResetTokenRepository,
+                emailVerificationTokenRepository, passwordEncoder, jwtService, tokenRevocationStore, mailSender,
+                "https://visionarios.example.com", false);
+        User user = new User(UUID.randomUUID(), "Ana Torres", "3000000000", "ana@example.com", "hashed",
+                Role.USER, Profile.PROFESIONAL);
+        user.markUnverified();
+        when(userRepository.findByEmail("ana@example.com")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("password123", "hashed")).thenReturn(true);
+        when(jwtService.issue(any())).thenReturn("jwt-token");
+
+        var response = authServiceFlagOff.login(new LoginRequest("ana@example.com", "password123"));
+
+        assertThat(response.token()).isEqualTo("jwt-token");
     }
 
     @Test

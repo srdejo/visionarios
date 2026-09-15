@@ -28,6 +28,10 @@ app:
   # Si esta variable apunta a un usuario ya registrado, se promueve a ADMIN al arrancar
   # (ver AdminBootstrapRunner) — resuelve crear el primer admin sin acceso directo a la BD.
   admin-bootstrap-email: ${ADMIN_BOOTSTRAP_EMAIL:}
+  # Feature flag: mientras esta en false, el registro marca al usuario como verificado
+  # de inmediato y el login no exige confirmacion de correo. Apagado por defecto porque
+  # el flujo de verificacion se ha vuelto un bloqueante para los usuarios (ver AuthService).
+  email-verification-enabled: ${EMAIL_VERIFICATION_ENABLED:false}
 
 contact:
   api:

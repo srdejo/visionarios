@@ -28,7 +28,7 @@ class UnverifiedAccountCleanupJobTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        job = new UnverifiedAccountCleanupJob(emailVerificationTokenRepository, userRepository);
+        job = new UnverifiedAccountCleanupJob(emailVerificationTokenRepository, userRepository, true);
     }
 
     @Test
@@ -69,6 +69,17 @@ class UnverifiedAccountCleanupJobTest {
 
         job.deleteExpiredUnverifiedAccounts();
 
+        verify(userRepository, never()).delete(any(User.class));
+    }
+
+    @Test
+    void withVerificationDisabled_neverDeletesAccounts() {
+        UnverifiedAccountCleanupJob jobFlagOff =
+                new UnverifiedAccountCleanupJob(emailVerificationTokenRepository, userRepository, false);
+
+        jobFlagOff.deleteExpiredUnverifiedAccounts();
+
+        verify(emailVerificationTokenRepository, never()).findByUsedFalseAndExpiresAtBefore(any(Instant.class));
         verify(userRepository, never()).delete(any(User.class));
     }
 }
