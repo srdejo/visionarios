@@ -6,7 +6,9 @@
     <div class="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-[18px] lg:mt-2">
       @for (ev of sortedEvents(); track ev.id) {
         <a [routerLink]="['/eventos', ev.id]"
-           class="border border-line-2 rounded-xl p-4 flex items-center gap-4 lg:bg-white lg:border-0 lg:rounded-[18px] lg:p-5">
+           class="border border-line-2 rounded-xl p-4 flex items-center gap-4 lg:bg-white lg:border-0 lg:rounded-[18px] lg:p-5"
+           [class.opacity-50]="isPast(ev.startsAt)"
+           [class.grayscale]="isPast(ev.startsAt)">
           <div class="text-center leading-none">
             <p class="font-oswald text-xl font-bold">{{ day(ev.startsAt) }}</p>
             <p class="font-oswald text-xs uppercase text-muted-1">{{ month(ev.startsAt) }}</p>
@@ -16,8 +18,8 @@
             <p class="text-muted-3 text-xs">{{ time(ev.startsAt) }} · {{ ev.place }}</p>
           </div>
           <span class="font-oswald text-xs uppercase px-2 py-1 rounded-full whitespace-nowrap"
-                [class]="isThisWeek(ev.startsAt) ? 'bg-orange text-dark' : 'bg-line-4 text-muted-1'">
-            {{ isThisWeek(ev.startsAt) ? 'Esta semana' : 'Abierto' }}
+                [class]="!isPast(ev.startsAt) && isThisWeek(ev.startsAt) ? 'bg-orange text-dark' : 'bg-line-4 text-muted-1'">
+            {{ isPast(ev.startsAt) ? 'Finalizado' : isThisWeek(ev.startsAt) ? 'Esta semana' : 'Abierto' }}
           </span>
         </a>
       } @empty {

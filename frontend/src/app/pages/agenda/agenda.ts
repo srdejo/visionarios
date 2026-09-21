@@ -12,9 +12,13 @@ export class Agenda {
   private readonly eventsService = inject(EventsService);
 
   readonly events = signal<EventResponse[]>([]);
-  readonly sortedEvents = computed(() =>
-    [...this.events()].sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime()),
-  );
+  // Proximos primero (mas cercano arriba); los pasados al final (mas reciente primero).
+  readonly sortedEvents = computed(() => {
+    const t = (e: EventResponse) => new Date(e.startsAt).getTime();
+    const upcoming = this.events().filter((e) => !this.isPast(e.startsAt)).sort((a, b) => t(a) - t(b));
+    const past = this.events().filter((e) => this.isPast(e.startsAt)).sort((a, b) => t(b) - t(a));
+    return [...upcoming, ...past];
+  });
 
   constructor() {
     this.eventsService.list().subscribe((res) => {
@@ -32,6 +36,10 @@ export class Agenda {
 
   time(iso: string): string {
     return new Date(iso).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  isPast(iso: string): boolean {
+    return new Date(iso).getTime() < Date.now();
   }
 
   isThisWeek(iso: string): boolean {
