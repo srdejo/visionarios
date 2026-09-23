@@ -8,7 +8,7 @@
 - [x] Frontend: página mínima que hace fetch a `/api/ping`.
 - [x] Infra: vhost nginx + unit systemd para `visionarios.micasachurch.co` (puerto 8089).
 - [x] Documentación base (`README.md`, `CLAUDE.md`, `docs/*`).
-- [ ] Backend levantado localmente contra Postgres real y `/api/ping` verificado en runtime (pendiente: crear la DB local).
+- [x] Backend levantado localmente contra Postgres real y `/api/ping` verificado en runtime — **2026-09-23**: sobre una base `visionarios` limpia en PostgreSQL 18, Flyway aplicó las **6 migraciones** (`v6`), `ddl-auto: validate` pasó, Tomcat escuchó en 8089 y `GET /api/ping` devolvió **200** con el sobre `ApiResponse` esperado (`{"success":true,"data":{"status":"ok",...},"error":null}`). Nota: `GET /actuator/health` responde **401** — el ítem de arriba dice "Actuator health expuesto" y hoy está detrás de la seguridad; revisar si es a propósito.
 - [ ] Despliegue real a `nolost-vps` (pendiente: dominio funcional definido primero).
 
 ## Etapa 1 — Red de Visionarios (dominio real)
