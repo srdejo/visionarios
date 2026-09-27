@@ -53,10 +53,10 @@ Sin SSR (`--ssr=false`) — no hay landing pública que requiera SEO todavía. V
 
 ## Infraestructura (`infra/`)
 
-- `infra/nginx/visionarios.micasachurch.co.conf` — dominio único, frontend estático en la raíz, `/api` proxeado al backend en `localhost:8089`.
-- `infra/visionarios.service` — unit systemd para correr el jar del backend.
+- `../infra/vps/visionarios/nginx/visionarios.micasachurch.co.conf` — dominio único, frontend estático en la raíz, `/api` proxeado al backend en `localhost:8089`.
+- `../infra/vps/visionarios/visionarios.service` — unit systemd para correr el jar del backend.
 
 ## Puertos
 
-- Backend: `8089` (dev y prod — ver `../PORTS.md` en la raíz del workspace).
+- Backend: `8089` (dev y prod — ver `../infra/PORTS.md` del workspace).
 - Frontend dev: `4200` (Angular CLI default).

@@ -27,7 +27,7 @@ Antes de escribir cualquier controlador, entidad o pantalla de negocio, el prime
 - Angular (standalone components, sin NgModules) + Tailwind CSS.
 
 **Infraestructura**
-- Sin Docker. Postgres nativo compartido (proyecto `infra/` en la raíz del workspace). Despliegue con systemd + nginx.
+- Sin Docker propio. Infraestructura compartida en `infra/` del workspace (local: Docker con URLs `*.test`; VPS: Postgres nativo + systemd + nginx) — ver `infra/CLAUDE.md`.
 - **Dominio único** `https://visionarios.micasachurch.co/`: frontend estático en la raíz, `/api` proxeado al backend — sin subdominio `api-` separado (mismo patrón que `nolost`, ver `docs/DECISIONS.md`).
 - Backend en el puerto 8089 (loopback), aún sin desplegar — ver `docs/DEPLOYMENT.md`.
 

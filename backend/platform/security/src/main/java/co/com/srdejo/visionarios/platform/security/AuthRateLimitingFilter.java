@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Limite de intentos por IP para los endpoints publicos de auth (login,
  * registro, olvide-mi-clave), que no tienen otra proteccion contra fuerza
  * bruta / spam. Ventana fija en memoria; suficiente para un unico proceso
- * backend (ver infra/visionarios.service) — si corre mas de una instancia,
+ * backend (ver infra/vps/visionarios/visionarios.service del workspace) — si corre mas de una instancia,
  * mover a un store compartido (ej. Redis).
  */
 @Component
