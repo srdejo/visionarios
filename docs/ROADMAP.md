@@ -1,6 +1,13 @@
 # ROADMAP.md
 
+## Objetivo actual: Cuentas seguras en la Red
+
+**Criterio de cierre**: un visionario se registra, verifica su correo y vuelve a entrar con "recordarme".
+**Alcance**: Etapa 0, Etapa 1, openspec:add-password-confirmation-and-email-verification, openspec:add-remember-password-login
+
 ## Etapa 0 — Base técnica
+
+**Criterio de cierre**: el backend responde `/api/ping` contra Postgres real en local y en `visionarios.micasachurch.co`.
 
 - [x] Backend: Gradle multi-módulo (`bootstrap`, `platform:web-common`, `modules:core`) — compila con `./gradlew build`.
 - [x] Backend: `/api/ping` responde vía `ApiResponse`, Flyway con `V1__init.sql`, Actuator health expuesto.
@@ -12,6 +19,8 @@
 - [ ] Despliegue real a `nolost-vps` (pendiente: dominio funcional definido primero).
 
 ## Etapa 1 — Red de Visionarios (dominio real)
+
+**Criterio de cierre**: con backend y frontend juntos, un visionario se registra, entra y ve los eventos y materiales de su perfil, y un admin invita a otro admin; primero en local y luego en producción.
 
 - [x] Backend: `platform:security` (JWT) copiado y adaptado de `consulting`, sin `platform:tenancy`.
 - [x] Backend: `modules:identity-access` — User, registro/login/forgot-password, `/api/users/me`.
