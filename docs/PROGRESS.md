@@ -20,6 +20,22 @@
 - Nueva página/ruta frontend `restablecer/:token` para completar el flujo del enlace del correo.
 - `./gradlew compileJava` y `npx tsc --noEmit` (frontend) pasan sin errores. No se probó el envío real end-to-end (requiere `contact-api` corriendo en `127.0.0.1:3000`).
 
+## Verificado en esta sesión (2026-09-22, build de producción del frontend)
+
+- `npm run build` (Angular 22, configuración `production`) **pasa sin errores de compilación**. Bundle
+  *initial* de 299.69 kB (80.33 kB transferido), por debajo del presupuesto de aviso de 500 kB, con 23
+  chunks lazy separados por ruta. Tiempo: 57 s.
+- Con eso queda cerrado el ítem "Frontend: pantallas y rutas de `DESIGN_SPEC.md`" de la Etapa 1 del
+  `ROADMAP.md`, que estaba a la espera justamente de esta verificación.
+- **Nota de entorno, no del código**: en el entorno del agente el último paso del build (*inlining* de
+  Google Fonts) falla con `403` porque el proxy de la caja bloquea `fonts.googleapis.com`. Se verificó
+  desactivando ese único paso; `angular.json` se restauró byte a byte y no quedó modificado. En la
+  máquina de Daniel y en el VPS, con salida a internet, ese paso no falla.
+- Los `node_modules` del repo están instalados para Windows; en Linux hubo que agregar los *bindings*
+  nativos (`lightningcss`, `@tailwindcss/oxide`, `@esbuild`, `@oxc-parser`, `@rolldown`, `@napi-rs/nice`)
+  para poder correr el build. `node_modules/` está en `.gitignore`, así que esto no toca el repo.
+- Sigue sin verificarse el flujo end-to-end en runtime (requiere Postgres local + backend corriendo).
+
 ## Tarea actual
 
 Ninguna pendiente de esta sesión de implementación.

@@ -1,6 +1,6 @@
 # DEPLOYMENT.md
 
-**Estado: subdominio + SSL en producción, app aún no desplegada.** Puerto reservado en `../PORTS.md` (8089). Modelado en el patrón de dominio único de `nolost.micasachurch.co` (ver `docs/DECISIONS.md`). El proyecto ya está wireado en `infra/deploy.ps1` (`-Projects visionarios`) para los despliegues normales de aquí en adelante — los pasos manuales de abajo son el runbook de aprovisionamiento inicial (ya ejecutados los pasos 2 y 3).
+**Estado: subdominio + SSL en producción, app aún no desplegada.** Puerto reservado en `../infra/PORTS.md` (8089). Modelado en el patrón de dominio único de `nolost.micasachurch.co` (ver `docs/DECISIONS.md`). El proyecto ya está wireado en `infra/deploy.ps1` (`-Projects visionarios`) para los despliegues normales de aquí en adelante — los pasos manuales de abajo son el runbook de aprovisionamiento inicial (ya ejecutados los pasos 2 y 3).
 
 - [x] Paso 2 — vhost de nginx subido y habilitado (2026-09-14).
 - [x] Paso 3 — certificado SSL emitido por Certbot, `https://visionarios.micasachurch.co` responde (2026-09-14, hoy da 500 porque falta desplegar la app — esperado).
@@ -21,14 +21,14 @@ GRANT ALL PRIVILEGES ON DATABASE visionarios TO visionarios;
 ALTER DATABASE visionarios OWNER TO visionarios;
 ```
 
-Agregar también a `infra/postgres/init-databases.ps1` en la raíz del workspace (ya hecho al crear este scaffold, ver ese archivo).
+Agregar también a `infra/postgres/init/01-databases.sql` en la raíz del workspace (ya hecho al crear este scaffold, ver ese archivo).
 
 ## 2. Vhost de nginx
 
-`/etc/nginx/sites-available/visionarios.micasachurch.co` — copiar el contenido de `infra/nginx/visionarios.micasachurch.co.conf` de este repo:
+`/etc/nginx/sites-available/visionarios.micasachurch.co` — copiar el contenido de `../infra/vps/visionarios/nginx/visionarios.micasachurch.co.conf` (config centralizada en la raíz del workspace):
 
 ```bash
-cat infra/nginx/visionarios.micasachurch.co.conf | ssh srdejo@nolost-vps "sudo tee /etc/nginx/sites-available/visionarios.micasachurch.co > /dev/null"
+cat ../infra/vps/visionarios/nginx/visionarios.micasachurch.co.conf | ssh srdejo@nolost-vps "sudo tee /etc/nginx/sites-available/visionarios.micasachurch.co > /dev/null"
 ssh srdejo@nolost-vps "sudo ln -sf /etc/nginx/sites-available/visionarios.micasachurch.co /etc/nginx/sites-enabled/visionarios.micasachurch.co"
 ssh srdejo@nolost-vps "sudo nginx -t && sudo systemctl reload nginx"
 ```
@@ -58,9 +58,9 @@ Certbot reescribe el vhost agregando el bloque `443 ssl` — mismo patrón que e
    MAIL_FROM_NAME=Red de Visionarios
    ```
    `APP_PUBLIC_URL` es la base con la que se arman los enlaces de los correos (recuperar contraseña, invitación de administrador, invitación de evento) — sin esto en prod, los enlaces apuntarían a `localhost:4200`. `CONTACT_API_URL` asume que `contact` (ver `../contact`) corre en el mismo host.
-4. Unit systemd: copiar `infra/visionarios.service` a `/etc/systemd/system/visionarios.service`:
+4. Unit systemd: copiar `../infra/vps/visionarios/visionarios.service` a `/etc/systemd/system/visionarios.service`:
    ```bash
-   cat infra/visionarios.service | ssh srdejo@nolost-vps "sudo tee /etc/systemd/system/visionarios.service > /dev/null"
+   cat ../infra/vps/visionarios/visionarios.service | ssh srdejo@nolost-vps "sudo tee /etc/systemd/system/visionarios.service > /dev/null"
    ssh srdejo@nolost-vps "sudo systemctl daemon-reload && sudo systemctl enable --now visionarios"
    ```
 5. Primer administrador: registrarse normal en `/registro`, luego agregar `ADMIN_BOOTSTRAP_EMAIL=ese-correo` al `.env`, reiniciar el servicio una vez (`sudo systemctl restart visionarios`) y quitarlo del `.env` de nuevo (ver `AdminBootstrapRunner`). De ahí en adelante los siguientes admins se invitan desde `/admin/equipo` sin volver a tocar el `.env`.

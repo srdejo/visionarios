@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Denylist de JWT revocados (logout) en memoria. Suficiente para un unico
- * proceso backend (ver infra/visionarios.service); si en el futuro corre mas
+ * proceso backend (ver infra/vps/visionarios/visionarios.service del workspace); si en el futuro corre mas
  * de una instancia, esto debe moverse a un store compartido (ej. Redis).
  */
 @Component

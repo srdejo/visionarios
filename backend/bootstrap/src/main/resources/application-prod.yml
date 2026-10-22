@@ -1,4 +1,4 @@
-# Perfil de produccion (--spring.profiles.active=prod, ver infra/visionarios.service).
+# Perfil de produccion (--spring.profiles.active=prod, ver infra/vps/visionarios/visionarios.service del workspace).
 # A diferencia de application.yml, aqui NO se definen valores por defecto para los
 # secretos/origen CORS: si la variable de entorno falta, el arranque falla en vez de
 # usar un valor inseguro (JWT_SECRET de ejemplo, password debil, localhost).
